@@ -2,11 +2,10 @@ import { FC, FormEvent, useState } from 'react';
 import { FormInput } from '../uiKit/FormInput';
 import { Button } from '../uiKit/Button';
 import { useAuth } from '../contexts/AuthProvider';
-import { useNavigate } from 'react-router';
 
 export const LoginForm: FC = () => {
   const { login } = useAuth();
-  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,7 +17,6 @@ export const LoginForm: FC = () => {
     // Здесь можно добавить логику авторизации
     console.log('Отправка формы:', formData);
     login();
-    navigate('/');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
