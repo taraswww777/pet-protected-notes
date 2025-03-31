@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="IssueNavigationConfiguration">
+    <option name="links">
+      <list>        
+        <!-- Ссылки на PR в GitHub -->
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="#(\d+)" />  <!-- #42 -->
+          <option name="linkRegexp" value="https://github.com/taraswww777/pet-protected-notes/pull/$1" />
+        </IssueNavigationLink>
+      </list>
+    </option>
+  </component>
+  
+  <!-- Настройки VCS (Git) -->
   <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>
