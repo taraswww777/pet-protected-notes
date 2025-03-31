@@ -1,9 +1,10 @@
 import { useState, FC, PropsWithChildren } from 'react';
 import { AuthContext } from './AuthContext';
+import { useNavigate } from 'react-router';
 
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const logout = () => {
@@ -12,6 +13,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const login = () => {
     setIsAuthenticated(true);
+    navigate('/');
   };
 
 

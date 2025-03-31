@@ -1,17 +1,17 @@
-import { BrowserRouter } from 'react-router'
-import { store } from './store'
-import { Provider } from 'react-redux'
-import { Router } from './Router'
+import { BrowserRouter } from 'react-router';
+import { store } from './store';
+import { Provider } from 'react-redux';
+import { Router } from './Router';
 import { AuthProvider } from './contexts/AuthProvider';
 
 export function App() {
   return (
-    <AuthProvider>
-      <Provider store={store}>
-        <BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <AuthProvider>
           <Router />
-        </BrowserRouter>
-      </Provider>
-    </AuthProvider>
-  )
+        </AuthProvider>
+      </BrowserRouter>
+    </Provider>
+  );
 }
