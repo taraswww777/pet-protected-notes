@@ -7,9 +7,11 @@ interface FormInputProps {
   name: string;
   id: string;
   placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const FormInput: React.FC<FormInputProps> = ({ label, type, name, id, placeholder }) => {
+export const FormInput: React.FC<FormInputProps> = ({ label, type, name, id, placeholder, value, onChange }) => {
   return (
     <div>
       <Label htmlFor={id}>{label}</Label>
@@ -18,6 +20,8 @@ export const FormInput: React.FC<FormInputProps> = ({ label, type, name, id, pla
         name={name}
         id={id}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
       />
     </div>
   );
