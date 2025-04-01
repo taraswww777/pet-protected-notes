@@ -1,21 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { getNoteById } from '../api/getNoteById';
+import { NoteDTO } from '../api/types/noteDTO';
+import { NoteCard } from '../components/NoteCard.tsx';
+import { RouteWithID } from '../types/RouteWithID';
 
-export const NoteViewPage: React.FC = () => {
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Просмотр заметки</h1>
-      <p className="mb-4">
-        Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias 
-        consequatur aut perferendis doloribus asperiores repellat.
-      </p>
-      <div className="bg-gray-100 p-4 rounded">
-        <p>
-          Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, 
-          vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+const NoteViewPage: React.FC = () => {
+  const { id } = useParams<RouteWithID>();
+  const [note, setNote] = useState<NoteDTO | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadNote = async () => {
+      try {
+        if (!id) return;
+        const data = await getNoteById(id);
+        setNote(data);
+      } catch (error) {
+        console.error('Ошибка при загрузке заметки:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNote();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-32 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!note) {
+    return (
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Заметка не найдена</h1>
+        <p className="text-gray-600">
+          Извините, но запрашиваемая заметка не существует или была удалена.
         </p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return <NoteCard note={note} />;
 };
 
 export default NoteViewPage; 
