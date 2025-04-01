@@ -72,3 +72,5 @@ export const NoteEditPage: React.FC = () => {
     </div>
   );
 };
+
+export default NoteEditPage;

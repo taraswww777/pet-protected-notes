@@ -16,4 +16,6 @@ export const TwoFAPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};
+
+export default TwoFAPage; 

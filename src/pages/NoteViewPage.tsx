@@ -16,4 +16,6 @@ export const NoteViewPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};
+
+export default NoteViewPage; 

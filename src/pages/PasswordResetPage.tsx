@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const PasswordResetPage: React.FC = () => {
+const PasswordResetPage: FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Сброс пароля</h1>
@@ -16,4 +16,6 @@ export const PasswordResetPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};
+
+export default PasswordResetPage; 
