@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const NotFoundPage: React.FC = () => {
+const NotFoundPage: FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Страница не найдена</h1>
@@ -16,4 +16,6 @@ export const NotFoundPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};
+
+export default NotFoundPage; 

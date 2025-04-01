@@ -1,7 +1,8 @@
 import { Navbar } from '../components/NavBar';
 import { NewsList } from '../components/NewsList';
+import { FC } from 'react';
 
-export const NotesListPage = () => {
+const NotesListPage: FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -16,4 +17,6 @@ export const NotesListPage = () => {
     </div>
   );
 };
+
+export default NotesListPage;
 

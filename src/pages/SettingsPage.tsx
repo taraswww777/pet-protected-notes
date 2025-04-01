@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const SettingsPage: React.FC = () => {
+const SettingsPage: FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Настройки</h1>
@@ -16,4 +16,6 @@ export const SettingsPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};
+
+export default SettingsPage; 

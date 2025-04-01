@@ -4,7 +4,7 @@ import { BaseModal } from '../uiKit/components/BaseModal.tsx';
 import { BaseConfirmModal } from '../uiKit/components/BaseConfirmModal.tsx';
 import { NewsList } from '../components/NewsList';
 
-export const HomePage = () => {
+const HomePage = () => {
   const [isBaseModalOpen, setIsBaseModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
@@ -66,4 +66,6 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage;
 

@@ -1,7 +1,7 @@
-import React from 'react';
+import { FC } from 'react';
 import { NoteEditor } from '../components/NoteEditor.tsx';
 
-export const NoteCreatePage: React.FC = () => {
+const NoteCreatePage: FC = () => {
   const handleSubmit = (values: { title: string; content: string }) => {
     // Здесь будет логика создания заметки
     console.log('Создание заметки:', values);
@@ -17,3 +17,5 @@ export const NoteCreatePage: React.FC = () => {
     </div>
   );
 };
+
+export default NoteCreatePage;

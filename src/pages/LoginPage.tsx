@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { LoginForm } from '../components/LoginForm';
 
-export const LoginPage: FC = () => {
+const LoginPage: FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Вход в систему</h1>
@@ -16,3 +16,5 @@ export const LoginPage: FC = () => {
     </div>
   );
 };
+
+export default LoginPage;

@@ -1,15 +1,17 @@
 import { Route, Routes } from 'react-router';
-import { HomePage } from './pages/HomePage';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { NoteCreatePage } from './pages/NoteCreatePage';
-import { NoteEditPage } from './pages/NoteEditPage';
-import { NoteViewPage } from './pages/NoteViewPage';
-import { PasswordResetPage } from './pages/PasswordResetPage';
-import { TwoFAPage } from './pages/TwoFAPage';
-import { SettingsPage } from './pages/SettingsPage';
-import { NotFoundPage } from './pages/NotFoundPage';
-import { NotesListPage } from './pages/NotesListPage';
+import {
+  HomePage,
+  LoginPage,
+  NoteCreatePage,
+  NoteEditPage,
+  NotesListPage,
+  NoteViewPage,
+  NotFoundPage,
+  PasswordResetPage,
+  RegisterPage,
+  SettingsPage,
+  TwoFAPage,
+} from './pages';
 
 export const Router = () => {
   return (
