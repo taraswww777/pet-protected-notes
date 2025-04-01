@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Navbar } from '../components/NavBar';
 import { BaseModal } from '../uiKit/components/BaseModal.tsx';
 import { BaseConfirmModal } from '../uiKit/components/BaseConfirmModal.tsx';
-import { NewsList } from '../components/NewsList';
+import { NotesList } from '../components/NotesList.tsx';
 
 const HomePage = () => {
   const [isBaseModalOpen, setIsBaseModalOpen] = useState(false);
@@ -10,7 +9,6 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar/>
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Добро пожаловать на домашнюю страницу!
@@ -35,7 +33,7 @@ const HomePage = () => {
           </button>
         </div>
 
-        <NewsList />
+        <NotesList />
       </main>
 
       <BaseModal

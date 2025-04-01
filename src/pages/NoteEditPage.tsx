@@ -3,9 +3,10 @@ import { useParams } from 'react-router';
 import { NoteEditor } from '../components/NoteEditor';
 import { getNoteById, updateNote } from '../api/getNoteById.ts';
 import { NoteDTO } from '../api/types/noteDTO.ts';
+import { RouteWithID } from '../types/RouteWithID.ts';
 
 export const NoteEditPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<RouteWithID>();
   const [note, setNote] = useState<NoteDTO | null>(null);
   const [loading, setLoading] = useState(true);
 
