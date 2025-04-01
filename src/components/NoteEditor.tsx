@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormInput } from '../uiKit/FormInput';
 import { TextareaField } from '../uiKit/TextareaField';
 
@@ -7,15 +7,25 @@ interface NoteFormValues {
   content: string;
 }
 
-interface NoteFormProps {
+interface NoteEditorProps {
+  initialValues?: {
+    title: string;
+    content: string;
+  };
   onSubmit: (values: NoteFormValues) => void;
 }
 
-export const NoteEditor: React.FC<NoteFormProps> = ({ onSubmit }) => {
+export const NoteEditor: React.FC<NoteEditorProps> = ({ initialValues, onSubmit }) => {
   const [formData, setFormData] = useState<NoteFormValues>({
     title: '',
     content: '',
   });
+
+  useEffect(() => {
+    if (initialValues) {
+      setFormData(initialValues);
+    }
+  }, [initialValues]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +65,7 @@ export const NoteEditor: React.FC<NoteFormProps> = ({ onSubmit }) => {
         type="submit"
         className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
       >
-        Создать заметку
+        Сохранить изменения
       </button>
     </form>
   );
