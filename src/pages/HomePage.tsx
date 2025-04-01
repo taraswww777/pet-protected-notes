@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Navbar } from "../components/NavBar";
+import { Navbar } from '../components/NavBar';
 import { BaseModal } from '../uiKit/components/BaseModal.tsx';
 import { BaseConfirmModal } from '../uiKit/components/BaseConfirmModal.tsx';
+import { NewsList } from '../components/NewsList';
 
 export const HomePage = () => {
   const [isBaseModalOpen, setIsBaseModalOpen] = useState(false);
@@ -14,10 +15,6 @@ export const HomePage = () => {
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Добро пожаловать на домашнюю страницу!
         </h1>
-        <p className="text-lg text-gray-600 mb-8">
-          Здесь вы можете увидеть рыбный текст.
-        </p>
-
         <div className="flex gap-4 mb-8">
           <button
             onClick={() => setIsBaseModalOpen(true)}
@@ -37,6 +34,8 @@ export const HomePage = () => {
             Открыть окно подтверждения
           </button>
         </div>
+
+        <NewsList />
       </main>
 
       <BaseModal

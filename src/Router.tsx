@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router';
+import { Route, Routes } from 'react-router';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -9,6 +9,7 @@ import { PasswordResetPage } from './pages/PasswordResetPage';
 import { TwoFAPage } from './pages/TwoFAPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { NotesListPage } from './pages/NotesListPage';
 
 export const Router = () => {
   return (
@@ -20,6 +21,7 @@ export const Router = () => {
       <Route path="/notes/create" element={<NoteCreatePage />} />
       <Route path="/notes/:id/edit" element={<NoteEditPage />} />
       <Route path="/notes/:id" element={<NoteViewPage />} />
+      <Route path="/notes" element={<NotesListPage />} />
 
       {/* Опциональные страницы */}
       <Route path="/password-reset" element={<PasswordResetPage />} />
