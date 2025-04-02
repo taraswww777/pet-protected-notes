@@ -1,13 +1,23 @@
 {
-  "name": "pet-react-template",
+  "name": "protected-notes",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "workspaces": [
+    "fe",
+    "be"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "be:build": "npm -w protected-notes-be run build",
+    "be:start": "npm -w protected-notes-be run start",
+    "be:start:tsx": "npm -w protected-notes-be run start:tsx",
+    "be:dev": "npm -w protected-notes-be run dev",
+    "be:lint": "npm -w protected-notes-be run lint",
+    "be:lint:fix": "npm -w protected-notes-be run lint:fix",
+    "fe:dev": "npm -w protected-notes-fe run dev",
+    "fe:build": "npm -w protected-notes-fe run build",
+    "fe:lint": "npm -w protected-notes-fe run lint",
+    "fe:preview": "npm -w protected-notes-fe run preview"
   },
   "devDependencies": {
     "@reduxjs/toolkit": "2.2.2",
@@ -18,12 +28,14 @@
     "@types/react-dom": "18.2.22",
     "@typescript-eslint/eslint-plugin": "7.3.1",
     "@typescript-eslint/parser": "7.3.1",
-    "@vitejs/plugin-react-swc": "3.6.0",
+    "@vitejs/plugin-react-swc": "3.8.1",
     "autoprefixer": "10.4.19",
     "axos": "0.0.1",
     "eslint": "8.57.0",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.6",
+    "fastify": "5.2.2",
+    "fastify-cli": "7.4.0",
     "lodash": "4.17.21",
     "postcss": "8.4.38",
     "react": "18.2.0",
@@ -32,7 +44,12 @@
     "react-redux": "9.1.0",
     "react-router": "7.4.1",
     "tailwindcss": "3.4.1",
+    "ts-node": "10.9.2",
+    "tsx": "4.19.3",
     "typescript": "5.4.3",
-    "vite": "5.4.11"
+    "vite": "6.2.4"
+  },
+  "engines": {
+    "node": "22"
   }
 }
