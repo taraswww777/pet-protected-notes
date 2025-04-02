@@ -1,46 +1,63 @@
 import { NoteDTO } from './notes.types';
 import { generateMockNotes } from './notes.mocks';
-
-// Инициализация моковых данных
-let notesService: NoteDTO[] = generateMockNotes();
+import { PaginatedResponse, PaginationParams } from '../../types';
 
 // CRUD операции
-export const NotesService = {
-  // Получить все заметки
-  getAll: () => notesService,
+// notes.service.ts
+export class NotesService {
+  // Инициализация моковых данных
+  private mockedNotes: NoteDTO[] = generateMockNotes();
 
-  // Получить заметку по id
-  getById: (id: number) => notesService.find(note => note.id === id),
+  getAll(params?: PaginationParams): PaginatedResponse<NoteDTO> {
+    const page = params?.page || 1;
+    const limit = params?.limit || 10;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
 
-  // Создать новую заметку
-  create: (data: Omit<NoteDTO, 'id' | 'createdAt'>) => {
-    const newNote: NoteDTO = {
-      id: notesService.length + 1,
-      ...data,
-      createdAt: new Date().toISOString()
+    const items = this.mockedNotes.slice(startIndex, endIndex);
+    const total = this.mockedNotes.length;
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items,
+      total,
+      currentPage: page,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrevious: page > 1,
     };
-    notesService.push(newNote);
-    return newNote;
-  },
+  }
 
-  // Обновить заметку
-  update: (id: number, data: Partial<Omit<NoteDTO, 'id' | 'createdAt'>>) => {
-    const index = notesService.findIndex(note => note.id === id);
+  getById(id: number) {
+    return this.mockedNotes.find(note => note.id === id);
+  }
+
+  create(data: Omit<NoteDTO, 'id' | 'createdAt'>) {
+    const newNote: NoteDTO = {
+      id: this.mockedNotes.length + 1,
+      ...data,
+      createdAt: new Date().toISOString(),
+    };
+    this.mockedNotes.push(newNote);
+    return newNote;
+  }
+
+  update(id: number, data: Partial<Omit<NoteDTO, 'id' | 'createdAt'>>) {
+    const index = this.mockedNotes.findIndex(note => note.id === id);
     if (index === -1) return null;
 
-    notesService[index] = {
-      ...notesService[index],
-      ...data
+    this.mockedNotes[index] = {
+      ...this.mockedNotes[index],
+      ...data,
     };
-    return notesService[index];
-  },
+    return this.mockedNotes[index];
+  }
 
-  // Удалить заметку
-  delete: (id: number) => {
-    const index = notesService.findIndex(note => note.id === id);
+  delete(id: number) {
+    const index = this.mockedNotes.findIndex(note => note.id === id);
     if (index === -1) return false;
 
-    notesService = notesService.filter(note => note.id !== id);
+    this.mockedNotes = this.mockedNotes.filter(note => note.id !== id);
     return true;
   }
-};
+}

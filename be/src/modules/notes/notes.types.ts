@@ -4,3 +4,8 @@ export interface NoteDTO {
   content: string;
   createdAt: string;
 }
+
+export interface CreateNoteBody {
+  title: string;
+  content: string;
+}
