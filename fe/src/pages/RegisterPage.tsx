@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { RegisterForm } from '../components/RegisterForm';
 
 const RegisterPage: FC = () => {
@@ -12,4 +12,4 @@ const RegisterPage: FC = () => {
   );
 };
 
-export default RegisterPage; 
+export default RegisterPage;
