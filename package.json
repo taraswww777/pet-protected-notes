@@ -23,6 +23,7 @@
     "fe:preview": "npm -w protected-notes-fe run preview"
   },
   "devDependencies": {
+    "@faker-js/faker": "9.6.0",
     "@reduxjs/toolkit": "2.2.2",
     "@swc/cli": "0.6.0",
     "@swc/core": "1.4.8",
