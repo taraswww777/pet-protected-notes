@@ -1,20 +1,8 @@
 import { NoteDTO } from './notes.types';
+import { generateMockNotes } from './notes.mocks';
 
-// Моковые данные
-let notesService: NoteDTO[] = [
-  {
-    id: 1,
-    title: "Первая заметка",
-    content: "Содержание первой заметки",
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 2,
-    title: "Вторая заметка",
-    content: "Содержание второй заметки",
-    createdAt: new Date().toISOString()
-  }
-];
+// Инициализация моковых данных
+let notesService: NoteDTO[] = generateMockNotes();
 
 // CRUD операции
 export const NotesService = {
