@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Приложение BE
+  be:
+    image: notes
+    restart: always
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+        tag: '{{.ImageName}}/{{.Name}}-{{.ID}}'
+    ports:
+      - "8080:8080"
+    #    command: ["ls", "-a", "./be/dist"]
+    command: [ "npm", "run", "be:start" ]
+  # Приложение FE
+  fe:
+    image: notes
+    restart: always
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+        tag: '{{.ImageName}}/{{.Name}}-{{.ID}}'
+    ports:
+      - "3000:3000"
+    command: [ "node", "./fe/.next/standalone/fe/server.js" ]
