@@ -21,8 +21,10 @@
     "fe:lint": "npm -w protected-notes-fe run lint",
     "fe:lint:fix": "npm -w protected-notes-fe run lint:fix",
     "fe:preview": "npm -w protected-notes-fe run preview",
+    "docker:dev": "docker-compose up -d",
     "docker:start": "docker-compose up",
-    "docker:build": "docker build -t scorp ."
+    "docker:build": "docker build -t protected-notes .",
+    "docker:stop": "docker-compose down"
   },
   "devDependencies": {
     "@faker-js/faker": "9.6.0",
