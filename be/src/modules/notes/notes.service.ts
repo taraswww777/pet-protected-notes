@@ -9,6 +9,7 @@ export class NotesService {
   private mockedNotes: NoteDTO[] = generateMockNotes();
 
   getAll(params?: PaginationParams): PaginatedResponse<NoteDTO> {
+
     const page = params?.page || 1;
     const limit = params?.limit || 10;
     const startIndex = (page - 1) * limit;
