@@ -31,13 +31,13 @@ export const Navbar = () => {
                 onClick={handleLogout}
                 className="hover:bg-blue-500 px-3 py-2 rounded"
               >
-                Logout
+                <span className="iconify mdi-light--logout text-2xl"></span>
               </button>
             </>
           ) : (
             <>
               <Link to="/login" className="hover:bg-blue-500 px-3 py-2 rounded">
-                Login
+                <span className="iconify mdi-light--login text-2xl"></span>
               </Link>
               <Link to="/register" className="hover:bg-blue-500 px-3 py-2 rounded">
                 Register
