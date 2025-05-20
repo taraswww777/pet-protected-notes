@@ -48,6 +48,7 @@
     "react-redux": "9.1.0",
     "react-router": "^7.6.0",
     "tailwindcss": "3.4.1",
+    "tailwindcss-plugin-icons": "2.2.2",
     "ts-node": "10.9.2",
     "tsx": "4.19.3",
     "typescript": "5.4.3",
