@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # База данных PostgreSQL
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: notes_user
+      POSTGRES_PASSWORD: secure_password
+      POSTGRES_DB: notes_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U notes_user -d notes_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Бэкенд приложения
+  be:
+    image: protected-notes
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://protected-notes_user:secure_password@db:5432/protected-notes_db?schema=public"
+      NODE_ENV: production
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+        tag: '{{.ImageName}}/{{.Name}}-{{.ID}}'
+    ports:
+      - "8080:8080"
+    command: [ "npm", "run", "be:start" ]
+
+  # Фронтенд приложения
+  fe:
+    image: nginx:alpine  # Используем легковесный Nginx для статики
+    restart: always
+    depends_on:
+      be:
+        condition: service_started
+    volumes:
+      - ./fe/dist:/usr/share/nginx/html  # Монтируем собранную статику
+    ports:
+      - "80:80"  # Стандартный HTTP-порт
+    environment:
+      - NEXT_PUBLIC_API_URL=http://be:8080  # Переменные для React
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:

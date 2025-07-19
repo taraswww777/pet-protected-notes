@@ -7,6 +7,17 @@ const HomePage = () => {
   const [isBaseModalOpen, setIsBaseModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
+  const openSetIsBaseModalOpen = () => {
+    let a = '';
+
+    for (let i = 0; i < 9999999; i++) {
+      a += i;
+    }
+    console.log('a:', a);
+
+    setIsBaseModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8">
@@ -15,7 +26,7 @@ const HomePage = () => {
         </h1>
         <div className="flex gap-4 mb-8">
           <button
-            onClick={() => setIsBaseModalOpen(true)}
+            onClick={openSetIsBaseModalOpen}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600
                      transition-colors duration-200 focus:outline-none focus:ring-2
                      focus:ring-blue-500 focus:ring-offset-2"
