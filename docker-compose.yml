@@ -41,22 +41,22 @@ services:
 
   # Фронтенд приложения
   fe:
-    image: protected-notes
+    image: nginx:alpine  # Используем легковесный Nginx для статики
     restart: always
     depends_on:
       be:
         condition: service_started
-    environment:
-      NEXT_PUBLIC_API_URL: "http://be:8080"
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '10m'
-        max-file: '3'
-        tag: '{{.ImageName}}/{{.Name}}-{{.ID}}'
+    volumes:
+      - ./fe/dist:/usr/share/nginx/html  # Монтируем собранную статику
     ports:
-      - "3000:3000"
-    command: [ "node", "./fe/.next/standalone/fe/server.js" ]
+      - "80:80"  # Стандартный HTTP-порт
+    environment:
+      - NEXT_PUBLIC_API_URL=http://be:8080  # Переменные для React
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:
