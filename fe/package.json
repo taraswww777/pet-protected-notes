@@ -1,5 +1,6 @@
 {
   "name": "protected-notes-fe",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
