@@ -1,16 +1,12 @@
 import { NoteDTO } from './types/noteDTO';
-import { getMockNoteDTO } from './mocks/mockNoteDTO';
+import { axiosInstance } from './asiosInstanse.ts';
+import { PaginatedResponse } from 'protected-notes-be/src/types.ts';
 
-/** Временная реализация для демонстрации */
 export const getNoteById = async (id: string): Promise<NoteDTO> => {
-  // Имитация задержки сети
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  // В будущем здесь будет реальный API-запрос
-  // return await fetch(`/api/notes/${id}`).then(res => res.json());
-
-  // Возвращаем моковые данные
-  return getMockNoteDTO(id);
+  return axiosInstance.get(`/api/notes/${id}`).then(({ data }) => data);
+};
+export const getNotesList = async (): Promise<PaginatedResponse<NoteDTO>> => {
+  return axiosInstance.get(`/api/notes`).then(({ data }) => data);
 };
 
 export const updateNote = async (

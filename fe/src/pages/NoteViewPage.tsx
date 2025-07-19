@@ -51,4 +51,4 @@ const NoteViewPage: React.FC = () => {
   return <NoteCard note={note} />;
 };
 
-export default NoteViewPage; 
+export default NoteViewPage;
