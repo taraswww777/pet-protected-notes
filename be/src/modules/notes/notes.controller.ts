@@ -9,7 +9,10 @@ export class NotesController {
   }
 
   async getAll(request: FastifyRequest<{ Querystring: PaginationParams }>) {
-    return this.notesService.getAll(request.query);
+    const page = request.query.page ? +request.query.page : undefined;
+    const limit = request.query.limit ? +request.query.limit : undefined;
+
+    return this.notesService.getAll({ page, limit });
   }
 
   async getById(
