@@ -9,13 +9,9 @@ const dbConfig: Config = {
   schema: './src/db/schema.ts',
   out: './migrations',
   dialect: 'postgresql',
-  driver: 'pg',
+  driver: 'pglite',
   dbCredentials: {
-    host: 'localhost',
-    port: 5432,
-    user: dbUser,
-    password: dbPassword,
-    database: dbName,
+    url: './.dbShema',
   },
 };
 
