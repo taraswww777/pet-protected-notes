@@ -6,7 +6,9 @@
     "start:tsx": "tsx ./src/server.ts",
     "dev": "tsx --watch ./src/server.ts --noEmit",
     "lint": "eslint -c ./eslint.config.mjs",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "db:migrate": "npx drizzle-kit migrate",
+    "db:generate": "npx drizzle-kit generate"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.3.5"

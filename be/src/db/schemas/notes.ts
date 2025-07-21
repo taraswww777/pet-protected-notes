@@ -1,11 +1,11 @@
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 
 // Определяем таблицы
-export const users = pgTable('users', {
+export const notes = pgTable('notes', {
   id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').unique(),
+  title: text('title').notNull(),
+  content: text('content').unique(),
 });
 
 // Экспортируем тип
-export type User = typeof users.$inferSelect;
+export type NotesDTO = typeof notes.$inferSelect;

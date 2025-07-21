@@ -1,17 +1,22 @@
 import type { Config } from 'drizzle-kit';
+import * as path from 'node:path';
+import { config } from 'dotenv';
 
-const dbUser = 'notes_user';
-const dbPassword = 'secure_password';
-const dbName = 'notes_db';
+const pathMigrations = './src/db/migrations';
+// const pathMigrations = path.resolve(__dirname, './src/db/migrations');
 
+config({
+  path: path.relative(__dirname, '../.env'),
+})
 
 const dbConfig: Config = {
-  schema: './src/db/schema.ts',
-  out: './migrations',
+  schema: './src/db/schemas/*',
+  out: pathMigrations,
+  strict: true,
+  verbose: true,
   dialect: 'postgresql',
-  driver: 'pglite',
   dbCredentials: {
-    url: './.dbShema',
+    url: process.env.POSTGRES_CONNECTION || '',
   },
 };
 
