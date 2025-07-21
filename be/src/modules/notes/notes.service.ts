@@ -1,6 +1,7 @@
 import { NoteDTO } from './notes.types';
 import { generateMockNotes } from './notes.mocks';
 import { PaginatedResponse, PaginationParams } from '../../types';
+import { db, schema } from '../../db';
 
 // CRUD операции
 // notes.service.ts
@@ -13,13 +14,16 @@ export class NotesService {
     const page = params?.page || 1;
     const limit = params?.limit || 10;
     const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
+    // const endIndex = startIndex + limit;
 
-    const items = this.mockedNotes.slice(startIndex, endIndex);
+    const items = db.select().from(schema.notes).limit(2).offset(startIndex);
+
+    // const items = this.mockedNotes.slice(startIndex, endIndex);
     const total = this.mockedNotes.length;
     const totalPages = Math.ceil(total / limit);
 
     return {
+    // @ts-ignore
       items,
       total,
       currentPage: page,
