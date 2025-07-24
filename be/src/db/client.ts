@@ -5,8 +5,11 @@ import * as schema from './schemas';
 import { config } from 'dotenv';
 import path from 'node:path';
 
+console.log('__dirname', __dirname)
+console.log('path.relative(__dirname', path.resolve(__dirname, '../../../.env'))
+
 config({
-  path: path.relative(__dirname, '../.env'),
+  path: path.resolve(__dirname, '../../../.env'),
 })
 
 if (!process.env.POSTGRES_CONNECTION) {

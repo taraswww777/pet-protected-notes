@@ -8,4 +8,4 @@ export const notes = pgTable('notes', {
 });
 
 // Экспортируем тип
-export type NotesDTO = typeof notes.$inferSelect;
+export type NoteDTO = typeof notes.$inferSelect;

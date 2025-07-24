@@ -1,30 +1,45 @@
-import { NoteDTO } from './notes.types';
+// import { NoteDTO } from './notes.types';
 import { generateMockNotes } from './notes.mocks';
 import { PaginatedResponse, PaginationParams } from '../../types';
 import { db, schema } from '../../db';
+import { sql } from 'drizzle-orm';
 
 // CRUD операции
 // notes.service.ts
 export class NotesService {
   // Инициализация моковых данных
-  private mockedNotes: NoteDTO[] = generateMockNotes();
+  private mockedNotes: schema.NoteDTO[] = generateMockNotes();
 
-  getAll(params?: PaginationParams): PaginatedResponse<NoteDTO> {
-
+  async getAll(
+    params?: PaginationParams
+  ): Promise<PaginatedResponse<schema.NoteDTO>> {
     const page = params?.page || 1;
     const limit = params?.limit || 10;
-    const startIndex = (page - 1) * limit;
-    // const endIndex = startIndex + limit;
+    const offset = (page - 1) * limit;
 
-    const items = db.select().from(schema.notes).limit(2).offset(startIndex);
+    // Запрашиваем данные и общее количество записей ОДНИМ запросом (оптимизация)
+    const [notes, total] = await Promise.all([
+      db.select()
+        .from(schema.notes)
+        .limit(limit)
+        .offset(offset)
+        .execute(), // Явный execute() для четкости
 
-    // const items = this.mockedNotes.slice(startIndex, endIndex);
-    const total = this.mockedNotes.length;
+      db.select({
+        count: sql<number>`count(id)`
+      })
+        .from(schema.notes)
+        .then((res) => res[0]?.count || 0)
+    ]);
+
     const totalPages = Math.ceil(total / limit);
 
     return {
-    // @ts-ignore
-      items,
+      items: notes.map((note) => ({
+        id: note.id,
+        title: note.title,
+        content: note.content,
+      })),
       total,
       currentPage: page,
       totalPages,
@@ -37,17 +52,16 @@ export class NotesService {
     return this.mockedNotes.find(note => note.id === id);
   }
 
-  create(data: Omit<NoteDTO, 'id' | 'createdAt'>) {
-    const newNote: NoteDTO = {
+  create(data: Omit<schema.NoteDTO, 'id' | 'createdAt'>) {
+    const newNote: schema.NoteDTO = {
       id: this.mockedNotes.length + 1,
       ...data,
-      createdAt: new Date().toISOString(),
     };
     this.mockedNotes.push(newNote);
     return newNote;
   }
 
-  update(id: number, data: Partial<Omit<NoteDTO, 'id' | 'createdAt'>>) {
+  update(id: number, data: Partial<Omit<schema.NoteDTO, 'id' | 'createdAt'>>) {
     const index = this.mockedNotes.findIndex(note => note.id === id);
     if (index === -1) return null;
 
