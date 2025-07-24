@@ -19,6 +19,7 @@
     "be:lint:fix": "npm -w protected-notes-be run lint:fix",
     "be:db:migrate": "npm -w protected-notes-be run db:migrate",
     "be:db:generate": "npm -w protected-notes-be run db:generate",
+    "db:seeding": "npm -w protected-notes-be run db:seeding",
     "fe": "echo FE scripts === === === === === === === === ===",
     "fe:dev": "npm -w protected-notes-fe run dev",
     "fe:build": "npm -w protected-notes-fe run build",

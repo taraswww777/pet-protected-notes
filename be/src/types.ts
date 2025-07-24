@@ -6,6 +6,7 @@ export interface PaginationParams {
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
+  countItems: number;
   currentPage: number;
   totalPages: number;
   hasNext: boolean;
