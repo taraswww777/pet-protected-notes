@@ -121,6 +121,7 @@
   },
   "exclude": [
     "./drizzle.config.ts",
+    "dist",
     "./seeding.ts"
   ]
 }
