@@ -1,0 +1,24 @@
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { AuthService } from './auth.service';
+import { RequestWithBody } from '../../types';
+import { schema } from '../../db';
+
+export class AuthController {
+  constructor(private readonly authService: AuthService) {
+  }
+
+
+  async login(request: FastifyRequest<RequestWithBody<schema.LoginUserBody>>, reply: FastifyReply) {
+    const data = request.body;
+    try {
+      const user = await this.authService.login(data);
+      if (!user) {
+        return reply.code(401).send({ error: 'Неверные учетные данные' });
+      }
+      return reply.send(user);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
+}
