@@ -2,7 +2,7 @@ import { fastify } from 'fastify';
 import { notesRoutes } from './modules/notes';
 import { authRoutes } from './modules/auth';
 
-const server = fastify();
+const server = fastify()
 
 server.register(notesRoutes, { prefix: 'api/notes' });
 server.register(authRoutes, { prefix: 'api/auth' });

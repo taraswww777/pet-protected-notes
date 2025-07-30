@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthService } from './auth.service';
-import { RequestWithBody } from '../../types';
+import { RequestWithBody } from '../../types/common';
 import { schema } from '../../db';
 
 export class AuthController {

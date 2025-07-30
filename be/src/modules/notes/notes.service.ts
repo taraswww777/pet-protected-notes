@@ -1,4 +1,4 @@
-import { PaginatedResponse, PaginationParams } from '../../types';
+import { PaginatedResponse, PaginationParams } from '../../types/common';
 import { db, schema } from '../../db';
 import { eq, sql } from 'drizzle-orm';
 

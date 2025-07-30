@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
-import { RequestWithBody } from '../../types';
+import { RequestWithBody } from '../../types/common';
 import { schema } from '../../db';
 
 export async function authRoutes(server: FastifyInstance) {

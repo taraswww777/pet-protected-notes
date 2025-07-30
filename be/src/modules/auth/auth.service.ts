@@ -1,17 +1,40 @@
 import { db, schema } from '../../db';
+import jwt from 'jsonwebtoken';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
-
+import { InvalidCredentialsError } from '../../errors';
+import { JWT_SECRET } from '../../constants';
 
 export class AuthService {
-  async login(data: schema.LoginUserBody): Promise<boolean> {
-    const user = await db.select().from(schema.users).where(eq(schema.users.login, data.login)).limit(1).execute();
+  async login(data: schema.LoginUserBody): Promise<schema.LoginUserSuccessResponse> {
 
-    if (!user.length) {
-      return false;
+    // 1. Находим пользователя
+    const [user] = await db.select()
+      .from(schema.users)
+      .where(eq(schema.users.login, data.login))
+      .limit(1)
+      .execute();
+
+    if (!user) {
+      throw new InvalidCredentialsError('User not found');
     }
 
-    return await bcrypt.compare(data.password, user[0].password);
+    // 2. Проверяем пароль
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+
+    if (!isPasswordValid) {
+      throw new InvalidCredentialsError('Invalid password');
+    }
+
+    // 3. Генерируем JWT-токен
+    const token = jwt.sign(
+      { userId: user.id }, // Payload
+      JWT_SECRET!, // Секретный ключ из .env
+      { expiresIn: '1w' } // Время жизни токена
+    );
+
+
+    return { token, id: user.id };
   }
 
   async register(data: schema.RegisterUserBody): Promise<boolean> {

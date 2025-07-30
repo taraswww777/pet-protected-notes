@@ -2,10 +2,14 @@ import { FastifyInstance } from 'fastify';
 import { NotesController } from './notes.controller';
 import { NotesService } from './notes.service';
 
-import { RequestWithBody, RouteWithPagination, WithId } from '../../types';
+import { RequestWithBody, RouteWithPagination, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
+import { middlewareVerifyJWT } from '../../middleware/middlewareVerifyJWT';
 
 export async function notesRoutes(server: FastifyInstance) {
+  // Добавляем middlewareVerifyJWT ко всем маршрутам
+  server.addHook('preHandler', middlewareVerifyJWT);
+
   const notesController = new NotesController(new NotesService());
 
   server.get<RouteWithPagination>('/', (req) => notesController.getAll(req));

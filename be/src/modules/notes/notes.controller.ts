@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { NotesService } from './notes.service';
 
-import { PaginationParams, RequestWithBody, WithId } from '../../types';
+import { PaginationParams, RequestWithBody, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
 
 export class NotesController {

@@ -1,6 +1,6 @@
 import { NoteDTO } from './types/noteDTO';
 import { axiosInstance } from './asiosInstanse.ts';
-import { PaginatedResponse, PaginationParams } from 'protected-notes-be/src/types.ts';
+import { PaginatedResponse, PaginationParams } from 'be/src/common.ts';
 
 export const getNoteById = async (id: string): Promise<NoteDTO> => {
   return axiosInstance.get(`/api/notes/${id}`).then(({ data }) => data);
