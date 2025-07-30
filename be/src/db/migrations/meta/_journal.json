@@ -8,6 +8,20 @@
       "when": 1753109916240,
       "tag": "0000_white_pyro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1753885189975,
+      "tag": "0001_far_nightmare",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753885324488,
+      "tag": "0002_amazing_wasp",
+      "breakpoints": true
     }
   ]
 }
