@@ -1,12 +1,20 @@
 import { NoteDTO } from './types/noteDTO';
 import { axiosInstance } from './asiosInstanse.ts';
-import { PaginatedResponse } from 'protected-notes-be/src/types.ts';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-be/src/types.ts';
 
 export const getNoteById = async (id: string): Promise<NoteDTO> => {
   return axiosInstance.get(`/api/notes/${id}`).then(({ data }) => data);
 };
-export const getNotesList = async (): Promise<PaginatedResponse<NoteDTO>> => {
-  return axiosInstance.get(`/api/notes`).then(({ data }) => data);
+export const getNotesList = async ({
+  limit,
+  page,
+}: PaginationParams): Promise<PaginatedResponse<NoteDTO>> => {
+  return axiosInstance.get(`/api/notes`, {
+    params: {
+      limit,
+      page,
+    },
+  }).then(({ data }) => data);
 };
 
 export const updateNote = async (

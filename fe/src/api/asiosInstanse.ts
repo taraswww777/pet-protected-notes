@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getMockNoteDTO, getMockNoteDTOList } from './mocks/mockNoteDTO.ts';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: '',
 });
 
 const IS_NEED_MOCK = false;
