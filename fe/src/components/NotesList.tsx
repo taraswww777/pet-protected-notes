@@ -2,14 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { getNotesList } from '../api/getNoteById.ts';
 import { NoteDTO } from '../api/types/noteDTO.ts';
+import { Pagination } from './Pagination.tsx';
+import { PAGE_SIZE_DEFAULT } from '../constants/common.ts';
 
 
 export const NotesList: React.FC = () => {
   const [notesList, setNotesList] = useState<NoteDTO[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(PAGE_SIZE_DEFAULT);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
+  const [hasPreviousPage, setHasPreviousPage] = useState<boolean>(false);
 
   useEffect(() => {
-    getNotesList().then(({ items }) => setNotesList(items));
-  }, []);
+    getNotesList({ page: currentPage, limit: pageSize }).then(({ items, hasNext, hasPrevious, totalPages }) => {
+      setNotesList(items);
+      setHasNextPage(hasNext);
+      setHasPreviousPage(hasPrevious);
+      setTotalPages(totalPages);
+    });
+  }, [currentPage, pageSize]);
 
   return (
     <div className="space-y-4">
@@ -25,6 +37,15 @@ export const NotesList: React.FC = () => {
           <p className="text-gray-600 mt-2">{item.content}</p>
         </div>
       ))}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        onPageSizeChange={setPageSize}
+        pageSize={pageSize}
+      />
     </div>
   );
 };
