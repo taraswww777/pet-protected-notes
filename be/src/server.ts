@@ -1,10 +1,11 @@
 import { fastify } from 'fastify';
 import { notesRoutes } from './modules/notes';
+import { authRoutes } from './modules/auth';
 
-const server = fastify();
+const server = fastify()
 
-// Регистрируем роуты для заметок
-server.register(notesRoutes, { prefix: 'api' });
+server.register(notesRoutes, { prefix: 'api/notes' });
+server.register(authRoutes, { prefix: 'api/auth' });
 
 server.listen({ port: 8080, host: '0.0.0.0' }, (err, address) => {
   if (err) {

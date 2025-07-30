@@ -10,7 +10,15 @@ export const users = pgTable('users', {
 });
 
 /** Тип данных для результатов SELECT-запросов к таблице `users`. */
-export type UserDTO = Omit<typeof users.$inferSelect, 'password'>;
+export type UserDTO = Pick<typeof users.$inferSelect, 'id' | 'login'>;
 
 /** Тип данных для операций INSERT в таблицу `users`. */
 export type UserInsertDTO = typeof users.$inferInsert;
+
+export type LoginUserBody = Pick<typeof users.$inferSelect, 'password' | 'login'>;
+
+export type LoginUserSuccessResponse = Pick<typeof users.$inferSelect, 'id'> & {
+  token: string;
+};
+
+export type RegisterUserBody = Pick<typeof users.$inferSelect, 'password' | 'login'>;
