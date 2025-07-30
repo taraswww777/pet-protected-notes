@@ -21,4 +21,16 @@ export class AuthController {
     }
   }
 
+  async register(request: FastifyRequest<RequestWithBody<schema.RegisterUserBody>>, reply: FastifyReply) {
+    const data = request.body;
+    try {
+      const user = await this.authService.register(data);
+      if (!user) {
+        return reply.code(400).send({ error: 'Не удалось зарегистрировать пользователя' });
+      }
+      return reply.send(user);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
 }

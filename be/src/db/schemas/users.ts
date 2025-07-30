@@ -16,3 +16,5 @@ export type UserDTO = Pick<typeof users.$inferSelect, 'id' | 'login'>;
 export type UserInsertDTO = typeof users.$inferInsert;
 
 export type LoginUserBody = Pick<typeof users.$inferSelect, 'password' | 'login'>;
+
+export type RegisterUserBody = Pick<typeof users.$inferSelect, 'password' | 'login'>;
