@@ -1,6 +1,7 @@
-import { PaginatedResponse, PaginationParams } from '../../types/common';
+import { PaginatedResponse } from '../../types/common';
 import { db, schema } from '../../db';
 import { eq, sql } from 'drizzle-orm';
+import { PaginationParams } from '../../types/zodSchemas/paginationZodSchema.js';
 
 
 export class NotesService {
@@ -8,7 +9,10 @@ export class NotesService {
     {
       page = 1,
       limit = 10
-    }: PaginationParams = {}
+    }: PaginationParams = {
+      page: 1,
+      limit: 10
+    }
   ): Promise<PaginatedResponse<schema.NoteDTO>> {
     const offset = (page - 1) * limit;
 
