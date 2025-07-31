@@ -1,8 +1,11 @@
 import { fastify } from 'fastify';
-import { notesRoutes } from './modules/notes';
-import { authRoutes } from './modules/auth';
+import { notesRoutes } from '../modules/notes';
+import { authRoutes } from '../modules/auth';
+import { registerFastifySwagger } from './registerSwagger';
 
-const server = fastify()
+const server = fastify();
+
+registerFastifySwagger(server)
 
 server.register(notesRoutes, { prefix: 'api/notes' });
 server.register(authRoutes, { prefix: 'api/auth' });
