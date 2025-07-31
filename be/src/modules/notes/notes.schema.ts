@@ -1,6 +1,6 @@
 // notes.schema.ts
-import { z } from "zod";
-import {schema} from '../../db';
+import { z, ZodObject } from "zod";
+import { schema } from '../../db';
 
 // Базовые схемы
 export const noteIdSchema = z.object({
@@ -19,6 +19,21 @@ export const noteCreateSchema = z.object({
 
 export const noteUpdateSchema = noteCreateSchema.partial();
 
-// Расширенные типы для эндпоинтов
-export type NoteWithId = z.infer<typeof noteIdSchema>;
-export type NotePagination = z.infer<typeof notePaginationSchema>;
+export const noteSchema = z.object({
+  id: z.number().min(1, "Название не может быть пустым").nonnegative(),
+  title: z.string().min(1, "Название не может быть пустым").max(100),
+  content: z.string().min(1, "Контент не может быть пустым"),
+}) satisfies z.ZodType<schema.NoteInsertDTO>;
+
+const pageableListSchema = (zodObject: ZodObject) => ({
+  items: z.array(zodObject),
+  countItems: z.number().min(0).nonnegative(),
+  total: z.number().min(0).nonnegative(),
+  currentPage: z.number().min(0).nonnegative(),
+  totalPages: z.number().min(0).nonnegative(),
+  hasNext: z.boolean(),
+  hasPrevious: z.boolean(),
+})
+
+export const noteListSchema = pageableListSchema(noteSchema);
+

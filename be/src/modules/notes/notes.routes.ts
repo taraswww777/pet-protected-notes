@@ -5,7 +5,7 @@ import { NotesService } from './notes.service';
 import { RequestWithBody, RouteWithPagination, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
 import { middlewareVerifyJWT } from '../../middleware/middlewareVerifyJWT';
-import { noteCreateSchema, noteIdSchema, notePaginationSchema, noteUpdateSchema } from './notes.schema';
+import { noteCreateSchema, noteIdSchema, noteListSchema, notePaginationSchema, noteUpdateSchema } from './notes.schema';
 
 export async function notesRoutes(server: FastifyInstance) {
   // Добавляем middlewareVerifyJWT ко всем маршрутам
@@ -16,6 +16,9 @@ export async function notesRoutes(server: FastifyInstance) {
   server.get<RouteWithPagination>('/', {
     schema: {
       querystring: notePaginationSchema,
+      response: {
+        200: noteListSchema
+      }
     },
   }, (req) => notesController.getAll(req));
   server.get<{
