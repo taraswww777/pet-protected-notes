@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { NotesService } from './notes.service';
-
-import { PaginationParams, RequestWithBody, WithId } from '../../types/common';
+import { PaginationParams } from '../../types/zodSchemas/paginationZodSchema';
+import { RequestWithBody, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
 
 export class NotesController {
@@ -9,8 +9,8 @@ export class NotesController {
   }
 
   async getAll(request: FastifyRequest<{ Querystring: PaginationParams }>) {
-    const page = request.query.page ? +request.query.page : undefined;
-    const limit = request.query.limit ? +request.query.limit : undefined;
+    const page = request.query.page ? +request.query.page : 1;
+    const limit = request.query.limit ? +request.query.limit : 10;
 
     return this.notesService.getAll({ page, limit });
   }
