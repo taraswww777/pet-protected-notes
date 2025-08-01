@@ -27,7 +27,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgresql://protected-notes_user:secure_password@db:5432/protected-notes_db?schema=public"
+      POSTGRES_CONNECTION: "postgresql://notes_user:secure_password@db:5432/notes_db?schema=public"
       NODE_ENV: production
     logging:
       driver: 'json-file'
@@ -37,11 +37,12 @@ services:
         tag: '{{.ImageName}}/{{.Name}}-{{.ID}}'
     ports:
       - "8080:8080"
-    command: [ "npm", "run", "be:start" ]
 
   # Фронтенд приложения
   fe:
-    image: nginx:alpine  # Используем легковесный Nginx для статики
+    build:
+      dockerfile: ./fe/Dockerfile
+      context: .
     restart: always
     depends_on:
       be:
