@@ -7,14 +7,14 @@ jobs:
   enforce-naming:
     runs-on: ubuntu-latest
     env:
-      BRANCH_NAME_PATTERN: ^(feature|bugfix|hotfix)/.+$
+      BRANCH_NAME_PATTERN: ^(feature|bugfix|hotfix)/[a-zA-Z0-9_-]+$
     steps:
       - uses: actions/checkout@v4
 
       - name: Validate branch name
         run: |
           if [[ ! $GITHUB_HEAD_REF =~ $BRANCH_NAME_PATTERN ]]; then
-            echo "::error::Неверное имя ветки. Имя ветки должно начинаться с 'feature/', 'bugfix/' или 'hotfix/'. Пример: feature/new-feature"
+            echo "::error::Неверное имя ветки. Имя ветки должно начинаться с 'feature/', 'bugfix/' или 'hotfix/' и содержать только буквы латинского алфавита, цифры, дефисы и нижние подчеркивания. Пример: feature/new-feature"
             exit 1
           else
             echo "Имя ветки '$GITHUB_HEAD_REF' прошло проверку."
