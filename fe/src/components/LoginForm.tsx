@@ -1,13 +1,18 @@
-import { FC, FormEvent, useState } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import { FormInput } from '../uiKit/FormInput';
 import { Button } from '../uiKit/Button';
 import { useAuth } from '../contexts/AuthProvider';
 
+interface LoginFormData {
+  login: string,
+  password: string,
+}
+
 export const LoginForm: FC = () => {
   const { login } = useAuth();
 
-  const [formData, setFormData] = useState({
-    email: '',
+  const [formData, setFormData] = useState<LoginFormData>({
+    login: '',
     password: '',
   });
 
@@ -16,7 +21,7 @@ export const LoginForm: FC = () => {
     e.stopPropagation();
     // Здесь можно добавить логику авторизации
     console.log('Отправка формы:', formData);
-    login();
+    login(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,10 +37,10 @@ export const LoginForm: FC = () => {
       <FormInput
         label="Email"
         type="email"
-        name="email"
+        name="login"
         id="email"
         placeholder="you@example.com"
-        value={formData.email}
+        value={formData.login}
         onChange={handleChange}
       />
       <FormInput

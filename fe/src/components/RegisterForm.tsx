@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthProvider';
 import { FormInput } from '../uiKit/FormInput.tsx';
 
 interface RegisterFormValues {
-  email: string;
+  login: string;
   password: string;
   confirmPassword: string;
 }
@@ -11,13 +11,13 @@ interface RegisterFormValues {
 
 export const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState<RegisterFormValues>({
-    email: '',
+    login: '',
     password: '',
     confirmPassword: '',
   });
   const [errors, setErrors] = useState<Partial<RegisterFormValues>>({});
 
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -29,8 +29,8 @@ export const RegisterForm: React.FC = () => {
   const validateForm = () => {
     const newErrors: Partial<RegisterFormValues> = {};
 
-    if (!formData.email) {
-      newErrors.email = 'Email обязателен';
+    if (!formData.login) {
+      newErrors.login = 'Логин обязателен';
     }
     if (!formData.password) {
       newErrors.password = 'Пароль обязателен';
@@ -44,8 +44,10 @@ export const RegisterForm: React.FC = () => {
   };
 
   const onSubmit = (fv: RegisterFormValues) => {
-    console.log('fv:', fv);
-    login();
+    register({
+      login: fv.login,
+      password: fv.password,
+    });
   };
 
 
@@ -59,15 +61,15 @@ export const RegisterForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <label className="block text-sm font-medium text-gray-700">login</label>
         <input
-          type="email"
-          name="email"
-          value={formData.email}
+          type="login"
+          name="login"
+          value={formData.login}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
         />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        {errors.login && <p className="text-red-500 text-sm">{errors.login}</p>}
       </div>
 
       <div>
