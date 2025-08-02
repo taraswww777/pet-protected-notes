@@ -1,9 +1,10 @@
 import { db, schema } from '../../db';
 import jwt from 'jsonwebtoken';
 import { eq } from 'drizzle-orm';
-import bcrypt from 'bcrypt';
+import bcrypt, { getRounds } from 'bcrypt';
 import { InvalidCredentialsError } from '../../errors';
 import { JWT_SECRET } from '../../constants';
+import { UserDTO } from '../../db/schemas';
 
 export class AuthService {
   async login(data: schema.LoginUserBody): Promise<schema.LoginUserSuccessResponse> {
@@ -30,7 +31,7 @@ export class AuthService {
     const token = jwt.sign(
       { userId: user.id }, // Payload
       JWT_SECRET!, // Секретный ключ из .env
-      { expiresIn: '1w' } // Время жизни токена
+      { expiresIn: '1w' }, // Время жизни токена
     );
 
 
@@ -54,5 +55,20 @@ export class AuthService {
     }).returning().execute();
 
     return true;
+  }
+
+
+  async userInfo(userId: number): Promise<UserDTO> {
+    const [user] = await db
+      .select({
+        id: schema.users.id,
+        login: schema.users.login,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.id, userId))
+      .limit(1)
+      .execute();
+
+    return user;
   }
 }

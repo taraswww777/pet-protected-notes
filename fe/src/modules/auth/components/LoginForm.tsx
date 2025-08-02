@@ -1,7 +1,7 @@
 import React, { FC, FormEvent, useState } from 'react';
-import { FormInput } from '../uiKit/FormInput';
-import { Button } from '../uiKit/Button';
-import { useAuth } from '../contexts/AuthProvider';
+import { FormInput } from '../../../uiKit/FormInput.tsx';
+import { Button } from '../../../uiKit/Button.tsx';
+import { useAuth } from '../../../contexts/AuthProvider';
 
 interface LoginFormData {
   login: string,
@@ -19,8 +19,6 @@ export const LoginForm: FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    // Здесь можно добавить логику авторизации
-    console.log('Отправка формы:', formData);
     login(formData);
   };
 

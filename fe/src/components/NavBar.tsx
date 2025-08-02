@@ -24,8 +24,8 @@ export const Navbar = () => {
               <Link to="/notes/create" className="hover:bg-blue-500 px-3 py-2 rounded">
                 New Note
               </Link>
-              <Link to="/settings" className="hover:bg-blue-500 px-3 py-2 rounded">
-                Settings
+              <Link to="/user" className="hover:bg-blue-500 px-3 py-2 rounded">
+                <span className="iconify mdi-light--account text-2xl"></span>
               </Link>
               <button
                 onClick={handleLogout}

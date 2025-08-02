@@ -33,4 +33,26 @@ export class AuthController {
       return reply.code(500).send({ error: 'Ошибка сервера' });
     }
   }
+
+  async currentUserInfo(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      // Получаем userId из верифицированного JWT (middlewareVerifyJWT уже добавил его в request)
+      const userId = (request.user as { userId: number })?.userId;
+
+      if (!userId) {
+        return reply.code(401).send({ error: 'Не авторизован' });
+      }
+
+      const user = await this.authService.userInfo(userId);
+
+      if (!user) {
+        return reply.code(404).send({ error: 'Пользователь не найден' });
+      }
+
+      return reply.send(user);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
 }
