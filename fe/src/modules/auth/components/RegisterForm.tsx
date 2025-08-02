@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthProvider';
-import { FormInput } from '../uiKit/FormInput.tsx';
+import { useAuth } from '../../../contexts/AuthProvider';
+import { FormInput } from '../../../uiKit/FormInput.tsx';
 
 interface RegisterFormValues {
   login: string;
