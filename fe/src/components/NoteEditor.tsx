@@ -1,21 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Input } from '../uiKit/Input';
 import { Textarea } from '../uiKit/Textarea.tsx';
+import { NotesServiceApi } from '../api/NotesServiceApi.ts';
 
 interface NoteFormValues {
   title: string;
   content: string;
 }
 
+export enum NoteEditorMode {
+  create = 'create',
+  edit = 'edit'
+}
+
 interface NoteEditorProps {
   initialValues?: NoteFormValues;
-  onSubmit: (values: NoteFormValues) => void;
+  mode: NoteEditorMode;
+  noteId?: number;
 }
 
 export const NoteEditor: React.FC<NoteEditorProps> = ({
   initialValues,
-  onSubmit,
+  mode = NoteEditorMode.create,
 }) => {
+  const isCreateMode = mode === NoteEditorMode.create;
+
+  const onSubmit = (fv: NoteFormValues) => {
+    if (isCreateMode) {
+
+      NotesServiceApi.createNote(fv).then((newNote) => {
+        console.log('Создана заметка: ', newNote.id);
+        // TODO: Добавить уведомление о статусе создания заметки
+      });
+    } else {
+      // TODO: Сделать сохранение при редактировании
+    }
+  };
   const [formData, setFormData] = useState<NoteFormValues>({
     title: '',
     content: '',

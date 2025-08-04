@@ -6,9 +6,10 @@ import { AxiosResponse } from 'axios';
 
 
 export class NotesServiceApi {
-
   static async getNoteById(id: string) {
-    return axiosInstance.get<undefined, AxiosResponse<NoteDTO>>(`/api/notes/${id}`).then(({ data }) => data);
+    return axiosInstance
+      .get<undefined, AxiosResponse<NoteDTO>>(`/api/notes/${id}`)
+      .then(({ data }) => data);
   }
 
   static async getNotesList({
