@@ -1,4 +1,4 @@
-import { InputVariant } from './Input.tsx';
+import { InputVariant } from './Input';
 import React from 'react';
 
 

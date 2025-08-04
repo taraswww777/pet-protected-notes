@@ -28,7 +28,7 @@ if (IS_NEED_MOCK) {
           // GET /api/notes/:id
           return {
             ...response,
-            data: getMockNoteDTO(noteId),
+            data: getMockNoteDTO(+noteId),
             status: 200,
             statusText: 'OK',
           };

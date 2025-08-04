@@ -1,6 +1,6 @@
 import { NoteDTO } from '../types/noteDTO';
 
-export const getMockNoteDTO = (id: string): NoteDTO => ({
+export const getMockNoteDTO = (id: number): NoteDTO => ({
   id,
   title: 'Тестовая заметка',
   content: 'Содержимое тестовой заметки',
@@ -8,6 +8,6 @@ export const getMockNoteDTO = (id: string): NoteDTO => ({
 
 export const getMockNoteDTOList = (count: number = 3): NoteDTO[] => {
   return Array.from({ length: count }, (_, index) =>
-    getMockNoteDTO(`${index + 1}`),
+    getMockNoteDTO(index + 1),
   );
 };

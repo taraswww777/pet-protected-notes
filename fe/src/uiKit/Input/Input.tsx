@@ -1,12 +1,6 @@
 import { InputHTMLAttributes, forwardRef } from 'react';
 import { FieldError } from 'react-hook-form';
-
-export enum InputVariant {
-  DEFAULT = 'default',
-  PRIMARY = 'primary',
-  DANGER = 'danger',
-  SUCCESS = 'success',
-}
+import { InputVariant } from './Input.types.ts';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;

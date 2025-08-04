@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { NotesServiceApi } from '../api/NotesServiceApi.ts';
-import { NoteDTO } from '../api/types/noteDTO';
-import { NoteCard } from '../components/NoteCard.tsx';
-import { RouteWithID } from '../types/RouteWithID';
+import { NoteEditor, NoteEditorMode } from '../../../components/NoteEditor';
+import { NotesServiceApi } from '../../../api/NotesServiceApi.ts';
+import { NoteDTO } from '../../../api/types/noteDTO.ts';
+import { RouteWithID } from '../../../types/RouteWithID.ts';
 
-const NoteViewPage: React.FC = () => {
+export const NoteEditPage: React.FC = () => {
   const { id } = useParams<RouteWithID>();
   const [note, setNote] = useState<NoteDTO | null>(null);
   const [loading, setLoading] = useState(true);
@@ -25,6 +25,7 @@ const NoteViewPage: React.FC = () => {
 
     loadNote();
   }, [id]);
+
 
   if (loading) {
     return (
@@ -48,7 +49,19 @@ const NoteViewPage: React.FC = () => {
     );
   }
 
-  return <NoteCard note={note} />;
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Редактирование заметки</h1>
+
+      <div className="bg-gray-100 p-4 rounded">
+        <NoteEditor
+          initialValues={note}
+          noteId={note.id}
+          mode={NoteEditorMode.edit}
+        />
+      </div>
+    </div>
+  );
 };
 
-export default NoteViewPage;
+export default NoteEditPage;
