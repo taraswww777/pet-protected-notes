@@ -27,7 +27,7 @@ export class NotesServiceApi {
   }
 
   static async updateNote(
-    id: string,
+    id: NoteDTO['id'],
     data: Omit<NoteDTO, 'id'>,
   ) {
     return axiosInstance

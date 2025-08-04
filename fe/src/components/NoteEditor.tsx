@@ -22,6 +22,7 @@ interface NoteEditorProps {
 export const NoteEditor: React.FC<NoteEditorProps> = ({
   initialValues,
   mode = NoteEditorMode.create,
+  noteId,
 }) => {
   const isCreateMode = mode === NoteEditorMode.create;
 
@@ -32,10 +33,14 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         console.log('Создана заметка: ', newNote.id);
         // TODO: Добавить уведомление о статусе создания заметки
       });
-    } else {
-      // TODO: Сделать сохранение при редактировании
+    } else if (noteId) {
+      NotesServiceApi.updateNote(noteId, fv).then((newNote) => {
+        console.log('Обновлена заметка: ', newNote.id);
+        // TODO: Добавить уведомление о статусе создания заметки
+      });
     }
   };
+
   const [formData, setFormData] = useState<NoteFormValues>({
     title: '',
     content: '',

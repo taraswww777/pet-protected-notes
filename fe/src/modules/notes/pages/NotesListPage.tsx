@@ -1,4 +1,4 @@
-import { NotesList } from '../components/NotesList.tsx';
+import { NotesList } from '../../../components/NotesList.tsx';
 import { FC } from 'react';
 
 const NotesListPage: FC = () => {

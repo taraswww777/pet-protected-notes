@@ -7,8 +7,8 @@ export class NotesService {
   async getAll(
     {
       page = 1,
-      limit = 10
-    }: PaginationParams = {}
+      limit = 10,
+    }: PaginationParams = {},
   ): Promise<PaginatedResponse<schema.NoteDTO>> {
     const offset = (page - 1) * limit;
 
@@ -20,10 +20,10 @@ export class NotesService {
         .execute(),
 
       db.select({
-        count: sql<number>`count(id)`
+        count: sql<number>`count(id)`,
       })
         .from(schema.notes)
-        .then((res) => res[0]?.count || 0)
+        .then((res) => res[0]?.count || 0),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -43,8 +43,13 @@ export class NotesService {
     };
   }
 
-  getById(id: number) {
-    return db.select().from(schema.notes).where(eq(schema.notes.id, id)).limit(1).execute();
+  async getById(id: number) {
+    const [note] = await db.select().from(schema.notes)
+      .where(eq(schema.notes.id, id))
+      .limit(1)
+      .execute();
+
+    return note;
   }
 
 

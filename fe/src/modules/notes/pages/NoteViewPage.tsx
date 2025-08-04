@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { NoteEditor } from '../components/NoteEditor';
-import { NotesServiceApi } from '../api/NotesServiceApi.ts';
-import { NoteDTO } from '../api/types/noteDTO.ts';
-import { RouteWithID } from '../types/RouteWithID.ts';
+import { NotesServiceApi } from '../../../api/NotesServiceApi.ts';
+import { NoteDTO } from '../../../api/types/noteDTO.ts';
+import { NoteCard } from '../../../components/NoteCard.tsx';
+import { RouteWithID } from '../../../types/RouteWithID.ts';
 
-export const NoteEditPage: React.FC = () => {
+const NoteViewPage: React.FC = () => {
   const { id } = useParams<RouteWithID>();
   const [note, setNote] = useState<NoteDTO | null>(null);
   const [loading, setLoading] = useState(true);
@@ -25,18 +25,6 @@ export const NoteEditPage: React.FC = () => {
 
     loadNote();
   }, [id]);
-
-  const handleSubmit = async (values: { title: string; content: string }) => {
-    try {
-      if (!id) return;
-      const updatedNote = await NotesServiceApi.updateNote(id, values);
-      setNote(updatedNote);
-      // Здесь можно добавить уведомление об успешном сохранении
-    } catch (error) {
-      console.error('Ошибка при сохранении заметки:', error);
-      // Здесь можно добавить уведомление об ошибке
-    }
-  };
 
   if (loading) {
     return (
@@ -60,18 +48,7 @@ export const NoteEditPage: React.FC = () => {
     );
   }
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Редактирование заметки</h1>
-
-      <div className="bg-gray-100 p-4 rounded">
-        <NoteEditor
-          initialValues={note}
-          onSubmit={handleSubmit}
-        />
-      </div>
-    </div>
-  );
+  return <NoteCard note={note} />;
 };
 
-export default NoteEditPage;
+export default NoteViewPage;

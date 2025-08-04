@@ -2,10 +2,6 @@ import { Route, Routes } from 'react-router';
 import { Suspense } from 'react';
 import {
   HomePage,
-  NoteCreatePage,
-  NoteEditPage,
-  NotesListPage,
-  NoteViewPage,
   NotFoundPage,
 } from './pages';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -13,8 +9,14 @@ import { Loader } from './uiKit/Loader.tsx';
 import { ErrorFallback } from './components/ErrorFallback.tsx';
 import {
   ChangePasswordPage,
-  LoginPage, ForgotPasswordPage, RegisterPage, TwoFAPage, UserPage, ResetPasswordPage,
+  LoginPage,
+  ForgotPasswordPage,
+  RegisterPage,
+  TwoFAPage,
+  UserPage,
+  ResetPasswordPage,
 } from './modules/auth';
+import { NoteCreatePage, NoteEditPage, NotesListPage, NoteViewPage } from './modules/notes';
 
 
 export const Router = () => {

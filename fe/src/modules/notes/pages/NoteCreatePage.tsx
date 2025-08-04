@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { NoteEditor, NoteEditorMode } from '../components/NoteEditor.tsx';
+import { NoteEditor, NoteEditorMode } from '../../../components/NoteEditor.tsx';
 
 const NoteCreatePage: FC = () => {
   return (
