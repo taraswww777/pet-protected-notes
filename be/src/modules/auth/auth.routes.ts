@@ -20,4 +20,14 @@ export async function authRoutes(server: FastifyInstance) {
     { preHandler: middlewareVerifyJWT },
     (req, reply) => authController.changePassword(req, reply),
   );
+
+  server.post<RequestWithBody<schema.ForgotPasswordBody>>(
+    '/forgot-password',
+    (req, reply) => authController.forgotPassword(req, reply)
+  );
+
+  server.post<RequestWithBody<schema.ResetPasswordBody>>(
+    '/reset-password',
+    (req, reply) => authController.resetPassword(req, reply)
+  );
 }

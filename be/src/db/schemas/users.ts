@@ -29,3 +29,13 @@ export interface ChangePasswordBody {
   oldPassword: string;
   newPassword: string;
 }
+
+export interface ForgotPasswordBody {
+  login: string; // email пользователя
+}
+
+export interface ResetPasswordBody {
+  login: string;
+  resetCode: string;
+  newPassword: string;
+}

@@ -10,7 +10,7 @@ export enum InputVariant {
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  error?: FieldError | string;
+  error?: FieldError | string | null;
   variant?: InputVariant;
   fullWidth?: boolean;
   className?: string;

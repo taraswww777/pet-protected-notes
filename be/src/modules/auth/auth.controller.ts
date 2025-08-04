@@ -82,4 +82,32 @@ export class AuthController {
     }
   }
 
+  async forgotPassword(
+    request: FastifyRequest<RequestWithBody<schema.ForgotPasswordBody>>,
+    reply: FastifyReply,
+  ) {
+    try {
+      const { login } = request.body;
+      await this.authService.initiatePasswordReset(login);
+      return reply.send({ success: true });
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
+  async resetPassword(
+    request: FastifyRequest<RequestWithBody<schema.ResetPasswordBody>>,
+    reply: FastifyReply,
+  ) {
+    try {
+      const success = await this.authService.completePasswordReset(request.body);
+      if (!success) {
+        return reply.code(400).send({ error: 'Неверный код или время его действия истекло' });
+      }
+      return reply.send({ success: true });
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
 }
