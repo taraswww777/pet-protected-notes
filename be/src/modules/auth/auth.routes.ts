@@ -16,5 +16,8 @@ export async function authRoutes(server: FastifyInstance) {
     { preHandler: middlewareVerifyJWT },
     (req, reply) => authController.currentUserInfo(req, reply),
   );
-
+  server.put<RequestWithBody<schema.ChangePasswordBody>>('/change-password',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => authController.changePassword(req, reply),
+  );
 }

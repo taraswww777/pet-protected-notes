@@ -71,4 +71,41 @@ export class AuthService {
 
     return user;
   }
+
+  // В auth.service.ts добавить:
+  async changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<boolean> {
+    // 1. Получаем текущего пользователя
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, userId))
+      .limit(1)
+      .execute();
+
+    if (!user) {
+      throw new InvalidCredentialsError('Пользователь не найден');
+    }
+
+    // 2. Проверяем старый пароль
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordValid) {
+      throw new InvalidCredentialsError('Неверный текущий пароль');
+    }
+
+    // 3. Хешируем новый пароль
+    const hashedPassword = await bcrypt.hash(newPassword, await bcrypt.genSalt());
+
+    // 4. Обновляем пароль
+    await db
+      .update(schema.users)
+      .set({ password: hashedPassword })
+      .where(eq(schema.users.id, userId))
+      .execute();
+
+    return true;
+  }
 }

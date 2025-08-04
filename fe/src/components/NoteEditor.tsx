@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FormInput } from '../uiKit/FormInput';
-import { TextareaField } from '../uiKit/TextareaField';
+import { Input } from '../uiKit/Input';
+import { Textarea } from '../uiKit/Textarea.tsx';
 
 interface NoteFormValues {
   title: string;
@@ -8,14 +8,14 @@ interface NoteFormValues {
 }
 
 interface NoteEditorProps {
-  initialValues?: {
-    title: string;
-    content: string;
-  };
+  initialValues?: NoteFormValues;
   onSubmit: (values: NoteFormValues) => void;
 }
 
-export const NoteEditor: React.FC<NoteEditorProps> = ({ initialValues, onSubmit }) => {
+export const NoteEditor: React.FC<NoteEditorProps> = ({
+  initialValues,
+  onSubmit,
+}) => {
   const [formData, setFormData] = useState<NoteFormValues>({
     title: '',
     content: '',
@@ -42,7 +42,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ initialValues, onSubmit 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <FormInput
+      <Input
         label="Название"
         type="text"
         name="title"
@@ -52,7 +52,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ initialValues, onSubmit 
         onChange={handleChange}
       />
 
-      <TextareaField
+      <Textarea
         label="Содержимое"
         name="content"
         id="content"
@@ -63,7 +63,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ initialValues, onSubmit 
 
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
       >
         Сохранить изменения
       </button>

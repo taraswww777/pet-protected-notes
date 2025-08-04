@@ -12,6 +12,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Loader } from './uiKit/Loader.tsx';
 import { ErrorFallback } from './components/ErrorFallback.tsx';
 import {
+  ChangePasswordPage,
   LoginPage, PasswordResetPage, RegisterPage, TwoFAPage, UserPage,
 } from './modules/auth';
 
@@ -28,6 +29,7 @@ export const Router = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="/user/change-password" element={<ChangePasswordPage />} />
 
           {/* Auth Опциональные страницы */}
           <Route path="/password-reset" element={<PasswordResetPage />} />

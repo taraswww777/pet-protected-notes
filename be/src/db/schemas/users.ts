@@ -22,3 +22,10 @@ export type LoginUserSuccessResponse = Pick<typeof users.$inferSelect, 'id'> & {
 };
 
 export type RegisterUserBody = Pick<typeof users.$inferSelect, 'password' | 'login'>;
+
+
+// В файле с типами (db/schemas.ts) нужно добавить тип:
+export interface ChangePasswordBody {
+  oldPassword: string;
+  newPassword: string;
+}

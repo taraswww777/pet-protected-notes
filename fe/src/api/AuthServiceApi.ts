@@ -12,4 +12,8 @@ export class AuthServiceApi {
   static getCurrentUserInfo() {
     return axiosInstance.get(`/api/auth/current-user-info`);
   }
+
+  static changePassword(body: { oldPassword: string; newPassword: string }) {
+    return axiosInstance.put(`/api/auth/change-password`, body);
+  }
 }

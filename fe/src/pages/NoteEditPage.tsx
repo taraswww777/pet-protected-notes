@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { NoteEditor } from '../components/NoteEditor';
-import { getNoteById, updateNote } from '../api/getNoteById.ts';
+import { NotesServiceApi } from '../api/NotesServiceApi.ts';
 import { NoteDTO } from '../api/types/noteDTO.ts';
 import { RouteWithID } from '../types/RouteWithID.ts';
 
@@ -14,7 +14,7 @@ export const NoteEditPage: React.FC = () => {
     const loadNote = async () => {
       try {
         if (!id) return;
-        const data = await getNoteById(id);
+        const data = await NotesServiceApi.getNoteById(id);
         setNote(data);
       } catch (error) {
         console.error('Ошибка при загрузке заметки:', error);
@@ -29,7 +29,7 @@ export const NoteEditPage: React.FC = () => {
   const handleSubmit = async (values: { title: string; content: string }) => {
     try {
       if (!id) return;
-      const updatedNote = await updateNote(id, values);
+      const updatedNote = await NotesServiceApi.updateNote(id, values);
       setNote(updatedNote);
       // Здесь можно добавить уведомление об успешном сохранении
     } catch (error) {

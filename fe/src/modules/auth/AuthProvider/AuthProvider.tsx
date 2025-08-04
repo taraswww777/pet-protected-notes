@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren, useState } from 'react';
-import { AuthContext, AuthContextType } from './AuthContext';
+import { AuthContext, AuthContextType } from './AuthContext.ts';
 import { useNavigate } from 'react-router';
-import { AuthServiceApi } from '../../api/AuthServiceApi.ts';
-import { axiosInstance } from '../../api/asiosInstanse.ts';
+import { AuthServiceApi } from '../../../api/AuthServiceApi.ts';
+import { axiosInstance } from '../../../api/asiosInstanse.ts';
 
 const JWT_TOKEN_NAME = 'JWT_TOKEN';
 
