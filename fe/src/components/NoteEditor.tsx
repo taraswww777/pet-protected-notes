@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Input } from '../uiKit/Input';
 import { Textarea } from '../uiKit/Textarea.tsx';
 import { NotesServiceApi } from '../api/NotesServiceApi.ts';
+import { Button, ButtonVariant } from '../uiKit/Button.tsx';
 
 interface NoteFormValues {
   title: string;
@@ -24,19 +26,19 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   mode = NoteEditorMode.create,
   noteId,
 }) => {
+  const navigate = useNavigate(); // Добавлен хук для навигации
   const isCreateMode = mode === NoteEditorMode.create;
 
   const onSubmit = (fv: NoteFormValues) => {
     if (isCreateMode) {
-
       NotesServiceApi.createNote(fv).then((newNote) => {
         console.log('Создана заметка: ', newNote.id);
-        // TODO: Добавить уведомление о статусе создания заметки
+        navigate(`/notes/${newNote.id}`); // Редирект после создания
       });
     } else if (noteId) {
       NotesServiceApi.updateNote(noteId, fv).then((newNote) => {
         console.log('Обновлена заметка: ', newNote.id);
-        // TODO: Добавить уведомление о статусе создания заметки
+        navigate(`/notes/${noteId}`); // Редирект после редактирования
       });
     }
   };
@@ -86,12 +88,23 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         onChange={handleChange}
       />
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-      >
-        Сохранить изменения
-      </button>
+      <div className="flex justify-between space-x-4 pt-4 border-t border-gray-200">
+        <Button
+          variant={ButtonVariant.NEUTRAL}
+          type="button"
+          onClick={() => {
+            navigate(`/notes/${noteId}`);
+          }}
+        >
+          Отмена
+        </Button>
+        <Button
+          variant={ButtonVariant.PRIMARY}
+          type="submit"
+        >
+          Сохранить изменения
+        </Button>
+      </div>
     </form>
   );
 };
