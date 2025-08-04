@@ -1,14 +1,5 @@
 import { forwardRef, ReactNode, MouseEventHandler } from 'react';
-
-// 1. Определяем enum с вариантами
-export enum ButtonVariant {
-  PRIMARY = 'default',
-  SUCCESS = 'success',
-  DANGER = 'danger',
-  WARNING = 'warning',
-  INFO = 'info',
-  NEUTRAL = 'neutral'
-}
+import { ButtonVariant } from './Button.types.ts';
 
 // 2. Маппинг вариантов на классы Tailwind
 const variantClasses = {

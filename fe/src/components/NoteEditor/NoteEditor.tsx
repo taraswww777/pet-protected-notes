@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Input } from '../uiKit/Input';
-import { Textarea } from '../uiKit/Textarea.tsx';
-import { NotesServiceApi } from '../api/NotesServiceApi.ts';
-import { Button, ButtonVariant } from '../uiKit/Button.tsx';
+import { Input } from '../../uiKit/Input';
+import { Textarea } from '../../uiKit/Textarea.tsx';
+import { NotesServiceApi } from '../../api/NotesServiceApi.ts';
+import { Button, ButtonVariant } from '../../uiKit/Button';
+import { NoteEditorMode } from './NoteEditor.types.ts';
 
 interface NoteFormValues {
   title: string;
   content: string;
 }
 
-export enum NoteEditorMode {
-  create = 'create',
-  edit = 'edit'
-}
 
 interface NoteEditorProps {
   initialValues?: NoteFormValues;

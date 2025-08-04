@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { NoteEditor, NoteEditorMode } from '../../../components/NoteEditor.tsx';
+import { NoteEditor, NoteEditorMode } from '../../../components/NoteEditor';
 import { NotesServiceApi } from '../../../api/NotesServiceApi.ts';
 import { NoteDTO } from '../../../api/types/noteDTO.ts';
 import { RouteWithID } from '../../../types/RouteWithID.ts';

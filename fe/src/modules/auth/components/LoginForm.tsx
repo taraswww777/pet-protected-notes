@@ -1,6 +1,6 @@
 import React, { FC, FormEvent, useState } from 'react';
 import { Input, InputVariant } from '../../../uiKit/Input';
-import { Button } from '../../../uiKit/Button.tsx';
+import { Button } from '../../../uiKit/Button';
 import { useAuth } from '../AuthProvider';
 
 interface LoginFormData {
