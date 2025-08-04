@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getNoteById } from '../api/getNoteById';
+import { NotesServiceApi } from '../api/NotesServiceApi.ts';
 import { NoteDTO } from '../api/types/noteDTO';
 import { NoteCard } from '../components/NoteCard.tsx';
 import { RouteWithID } from '../types/RouteWithID';
@@ -14,7 +14,7 @@ const NoteViewPage: React.FC = () => {
     const loadNote = async () => {
       try {
         if (!id) return;
-        const data = await getNoteById(id);
+        const data = await NotesServiceApi.getNoteById(id);
         setNote(data);
       } catch (error) {
         console.error('Ошибка при загрузке заметки:', error);

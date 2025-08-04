@@ -2,7 +2,7 @@ import { BrowserRouter } from 'react-router';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { Router } from './Router';
-import { AuthProvider } from './contexts/AuthProvider';
+import { AuthProvider } from './modules/auth';
 import { PageTemplate } from './components/PageTemplate.tsx';
 
 export function App() {

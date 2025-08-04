@@ -10,7 +10,7 @@ const LoginPage: FC = () => {
         <div className="text-sm mt-4">
           <p>Если у вас нет аккаунта, <a href="/register" className="text-blue-500 hover:text-blue-700">регистрация</a>.
           </p>
-          <p><a href="/password-reset" className="text-blue-500 hover:text-blue-700">Забыли пароль?</a></p>
+          <p><a href="/forgot-password" className="text-blue-500 hover:text-blue-700">Забыли пароль?</a></p>
         </div>
       </div>
     </div>

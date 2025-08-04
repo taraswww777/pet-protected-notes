@@ -1,12 +1,15 @@
 import { db, schema } from '../../db';
 import jwt from 'jsonwebtoken';
 import { eq } from 'drizzle-orm';
-import bcrypt, { getRounds } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { InvalidCredentialsError } from '../../errors';
 import { JWT_SECRET } from '../../constants';
-import { UserDTO } from '../../db/schemas';
+import { ResetPasswordBody, UserDTO } from '../../db/schemas';
+import { randomInt } from 'crypto'; // Добавьте эту строку
 
 export class AuthService {
+  private resetCodes = new Map<string, { code: string; expiresAt: Date }>();
+
   async login(data: schema.LoginUserBody): Promise<schema.LoginUserSuccessResponse> {
 
     // 1. Находим пользователя
@@ -71,4 +74,86 @@ export class AuthService {
 
     return user;
   }
+
+  // В auth.service.ts добавить:
+  async changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<boolean> {
+    // 1. Получаем текущего пользователя
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, userId))
+      .limit(1)
+      .execute();
+
+    if (!user) {
+      throw new InvalidCredentialsError('Пользователь не найден');
+    }
+
+    // 2. Проверяем старый пароль
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordValid) {
+      throw new InvalidCredentialsError('Неверный текущий пароль');
+    }
+
+    // 3. Хешируем новый пароль
+    const hashedPassword = await bcrypt.hash(newPassword, await bcrypt.genSalt());
+
+    // 4. Обновляем пароль
+    await db
+      .update(schema.users)
+      .set({ password: hashedPassword })
+      .where(eq(schema.users.id, userId))
+      .execute();
+
+    return true;
+  }
+
+  async initiatePasswordReset(login: string): Promise<boolean> {
+    const [user] = await db.select()
+      .from(schema.users)
+      .where(eq(schema.users.login, login))
+      .limit(1)
+      .execute();
+
+    if (!user) return true; // Возвращаем true даже если пользователя нет, чтобы не раскрывать информацию
+
+    // Генерируем 6-значный код
+    const resetCode = randomInt(100000, 999999).toString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
+
+    this.resetCodes.set(login, { code: resetCode, expiresAt });
+
+    // В реальном приложении здесь должна быть отправка email
+    console.log(`Reset code for ${login}: ${resetCode}`); // Для разработки
+
+    return true;
+  }
+
+  async completePasswordReset(data: ResetPasswordBody): Promise<boolean> {
+    const resetData = this.resetCodes.get(data.login);
+
+    // Проверяем код и время его жизни
+    if (!resetData || resetData.code !== data.resetCode || resetData.expiresAt < new Date()) {
+      return false;
+    }
+
+    // Хешируем новый пароль
+    const hashedPassword = await bcrypt.hash(data.newPassword, await bcrypt.genSalt());
+
+    // Обновляем пароль
+    await db.update(schema.users)
+      .set({ password: hashedPassword })
+      .where(eq(schema.users.login, data.login))
+      .execute();
+
+    // Удаляем использованный код
+    this.resetCodes.delete(data.login);
+
+    return true;
+  }
+
 }

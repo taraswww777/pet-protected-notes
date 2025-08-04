@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { getNotesList } from '../api/getNoteById.ts';
+import { NotesServiceApi } from '../api/NotesServiceApi.ts';
 import { NoteDTO } from '../api/types/noteDTO.ts';
 import { Pagination } from './Pagination.tsx';
 import { PAGE_SIZE_DEFAULT } from '../constants/common.ts';
@@ -15,7 +15,7 @@ export const NotesList: React.FC = () => {
   const [hasPreviousPage, setHasPreviousPage] = useState<boolean>(false);
 
   useEffect(() => {
-    getNotesList({ page: currentPage, limit: pageSize }).then(({ items, hasNext, hasPrevious, totalPages }) => {
+    NotesServiceApi.getNotesList({ page: currentPage, limit: pageSize }).then(({ items, hasNext, hasPrevious, totalPages }) => {
       setNotesList(items);
       setHasNextPage(hasNext);
       setHasPreviousPage(hasPrevious);

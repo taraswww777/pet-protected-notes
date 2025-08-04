@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthService } from './auth.service';
 import { RequestWithBody } from '../../types/common';
 import { schema } from '../../db';
+import { InvalidCredentialsError } from '../../errors';
 
 export class AuthController {
   constructor(private readonly authService: AuthService) {
@@ -50,6 +51,60 @@ export class AuthController {
       }
 
       return reply.send(user);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
+  // В auth.controller.ts добавить:
+  async changePassword(
+    request: FastifyRequest<RequestWithBody<schema.ChangePasswordBody>>,
+    reply: FastifyReply,
+  ) {
+    const userId = (request.user as { userId: number })?.userId;
+    const { oldPassword, newPassword } = request.body;
+
+    if (!userId) {
+      return reply.code(401).send({ error: 'Не авторизован' });
+    }
+
+    try {
+      const success = await this.authService.changePassword(userId, oldPassword, newPassword);
+      if (!success) {
+        return reply.code(400).send({ error: 'Не удалось изменить пароль' });
+      }
+      return reply.send({ success: true });
+    } catch (error) {
+      if (error instanceof InvalidCredentialsError) {
+        return reply.code(401).send({ error: error.message });
+      }
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
+  async forgotPassword(
+    request: FastifyRequest<RequestWithBody<schema.ForgotPasswordBody>>,
+    reply: FastifyReply,
+  ) {
+    try {
+      const { login } = request.body;
+      await this.authService.initiatePasswordReset(login);
+      return reply.send({ success: true });
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
+  async resetPassword(
+    request: FastifyRequest<RequestWithBody<schema.ResetPasswordBody>>,
+    reply: FastifyReply,
+  ) {
+    try {
+      const success = await this.authService.completePasswordReset(request.body);
+      if (!success) {
+        return reply.code(400).send({ error: 'Неверный код или время его действия истекло' });
+      }
+      return reply.send({ success: true });
     } catch (error) {
       return reply.code(500).send({ error: 'Ошибка сервера' });
     }
