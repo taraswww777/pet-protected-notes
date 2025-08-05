@@ -5,6 +5,7 @@ import { Textarea } from '../../uiKit/Textarea.tsx';
 import { NotesServiceApi } from '../../api/NotesServiceApi.ts';
 import { Button, ButtonVariant } from '../../uiKit/Button';
 import { NoteEditorMode } from './NoteEditor.types.ts';
+import { useNotification } from '../../services/NotificationService';
 
 interface NoteFormValues {
   title: string;
@@ -23,18 +24,19 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   mode = NoteEditorMode.create,
   noteId,
 }) => {
-  const navigate = useNavigate(); // Добавлен хук для навигации
+  const navigate = useNavigate();
+  const { showNotification } = useNotification();
   const isCreateMode = mode === NoteEditorMode.create;
 
   const onSubmit = (fv: NoteFormValues) => {
     if (isCreateMode) {
       NotesServiceApi.createNote(fv).then((newNote) => {
-        console.log('Создана заметка: ', newNote.id);
+        showNotification(`Создана заметка: ${newNote.id}`);
         navigate(`/notes/${newNote.id}`); // Редирект после создания
       });
     } else if (noteId) {
       NotesServiceApi.updateNote(noteId, fv).then((newNote) => {
-        console.log('Обновлена заметка: ', newNote.id);
+        showNotification(`Обновлена заметка: ${newNote.id}`);
         navigate(`/notes/${noteId}`); // Редирект после редактирования
       });
     }

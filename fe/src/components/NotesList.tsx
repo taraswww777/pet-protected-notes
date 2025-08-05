@@ -4,6 +4,7 @@ import { NotesServiceApi } from '../api/NotesServiceApi.ts';
 import { NoteDTO } from '../api/types/noteDTO.ts';
 import { Pagination } from './Pagination.tsx';
 import { PAGE_SIZE_DEFAULT } from '../constants/common.ts';
+import { useAuth } from '../modules/auth';
 
 
 export const NotesList: React.FC = () => {
@@ -13,15 +14,25 @@ export const NotesList: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [hasPreviousPage, setHasPreviousPage] = useState<boolean>(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    NotesServiceApi.getNotesList({ page: currentPage, limit: pageSize }).then(({ items, hasNext, hasPrevious, totalPages }) => {
+    NotesServiceApi.getNotesList({ page: currentPage, limit: pageSize }).then(({
+      items,
+      hasNext,
+      hasPrevious,
+      totalPages,
+    }) => {
       setNotesList(items);
       setHasNextPage(hasNext);
       setHasPreviousPage(hasPrevious);
       setTotalPages(totalPages);
     });
   }, [currentPage, pageSize]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="space-y-4">
