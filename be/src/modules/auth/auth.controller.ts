@@ -18,7 +18,7 @@ export class AuthController {
       }
       return reply.send(user);
     } catch (error) {
-      return reply.code(500).send({ error: 'Ошибка сервера' });
+      return reply.code(500).send({ error: 'Ошибка сервера:' + error });
     }
   }
 

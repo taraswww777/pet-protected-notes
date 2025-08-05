@@ -10,7 +10,7 @@ import { randomInt } from 'crypto'; // Добавьте эту строку
 export class AuthService {
   private resetCodes = new Map<string, { code: string; expiresAt: Date }>();
 
-  async login(data: schema.LoginUserBody): Promise<schema.LoginUserSuccessResponse> {
+  async login(data: schema.LoginUserBody): Promise<undefined | schema.LoginUserSuccessResponse> {
 
     // 1. Находим пользователя
     const [user] = await db.select()
@@ -20,14 +20,14 @@ export class AuthService {
       .execute();
 
     if (!user) {
-      throw new InvalidCredentialsError('User not found');
+      return undefined;
     }
 
     // 2. Проверяем пароль
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
 
     if (!isPasswordValid) {
-      throw new InvalidCredentialsError('Invalid password');
+      return undefined;
     }
 
     // 3. Генерируем JWT-токен

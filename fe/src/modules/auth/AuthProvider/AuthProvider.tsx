@@ -3,6 +3,8 @@ import { AuthContext, AuthContextType } from './AuthContext.ts';
 import { useNavigate } from 'react-router';
 import { AuthServiceApi } from '../../../api/AuthServiceApi.ts';
 import { axiosInstance } from '../../../api/asiosInstanse.ts';
+import { useNotification } from '../../../services/NotificationService';
+import { NotificationType } from '../../../services/NotificationService/NotificationService.types.ts';
 
 const JWT_TOKEN_NAME = 'JWT_TOKEN';
 
@@ -39,6 +41,7 @@ setTokenAxiosInstanse(getJwtToken());
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
   const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getJwtToken()));
 
   const logout = () => {
@@ -57,6 +60,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       setJwtToken(token);
       setIsAuthenticated(true);
       navigate('/');
+    }).catch(e => {
+      showNotification(e.response.data.error, { type: NotificationType.danger });
     });
   };
 
@@ -67,7 +72,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       if (e.name === 'AxiosError') {
         const message = e.response.data.error || e.message;
 
-        alert(message);
+        showNotification(message, { type: NotificationType.danger });
       }
     });
   };
