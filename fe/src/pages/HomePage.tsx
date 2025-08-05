@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { BaseModal } from '../uiKit/components/BaseModal.tsx';
 import { BaseConfirmModal } from '../uiKit/components/BaseConfirmModal.tsx';
 import { NotesList } from '../components/NotesList.tsx';
+// import { useNotification } from '../servises/NotificationService';
+// import { NotificationType } from '../servises/NotificationService/NotificationService.types.ts';
 
 const HomePage = () => {
   const [isBaseModalOpen, setIsBaseModalOpen] = useState(false);
@@ -17,6 +19,19 @@ const HomePage = () => {
 
     setIsBaseModalOpen(true);
   };
+  // const { showNotification } = useNotification();
+  //
+  // useEffect(() => {
+  //   // Все эти уведомления покажутся по очереди
+  //   setTimeout(()=>{showNotification('1 сообщение default');}, 1000 * 1)
+  //   setTimeout(()=>{showNotification('2 сообщение success', { type: NotificationType.success });},1000 * 2)
+  //   setTimeout(()=>{showNotification('3 сообщение danger', { type: NotificationType.danger });},1000 * 3)
+  //   setTimeout(()=>{showNotification('4 сообщение warning', { type: NotificationType.warning });},1000 * 4)
+  //   setTimeout(()=>{showNotification('5 сообщение info', { type: NotificationType.info });},1000 * 5)
+  //   setTimeout(()=>{showNotification('6 сообщение info', { type: NotificationType.info });},1000 * 6)
+  //   setTimeout(()=>{showNotification('7 сообщение info', { type: NotificationType.info });},1000 * 7)
+  // }, [])
+
 
   return (
     <div className="min-h-screen bg-gray-50">
