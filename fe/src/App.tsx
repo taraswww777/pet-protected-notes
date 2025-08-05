@@ -4,16 +4,19 @@ import { Provider } from 'react-redux';
 import { Router } from './Router';
 import { AuthProvider } from './modules/auth';
 import { PageTemplate } from './components/PageTemplate.tsx';
+import { NotificationProvider } from './services/NotificationService';
 
 export function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <AuthProvider>
-          <PageTemplate>
-            <Router />
-          </PageTemplate>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <PageTemplate>
+              <Router />
+            </PageTemplate>
+          </AuthProvider>
+        </NotificationProvider>
       </BrowserRouter>
     </Provider>
   );
