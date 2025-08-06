@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { db, schema } from '../../db';
+import { db, schema } from '../../index';
 
 const generateMockNotesItem = (): schema.NoteInsertDTO => ({
-  title: faker.lorem.sentence({ min: 2, max: 5 }),       // Пример: "How to learn Drizzle ORM"
-  content: faker.lorem.paragraphs({ min: 1, max: 3 }),  // Пример: "Drizzle is a modern ORM..."
-})
+  title: faker.lorem.sentence({ min: 2, max: 5 }), // Пример: "How to learn Drizzle ORM"
+  content: faker.lorem.paragraphs({ min: 1, max: 3 }),
+  user_id: faker.number.int({ min: 1, max: 10 }),
+});
 
 // Функция для генерации тестовых заметок
 const generateMockNotes = (count: number): schema.NoteInsertDTO[] => {
@@ -32,7 +33,7 @@ export async function seedingNotes(countAddItems: number = 10, needClearTable = 
     const mockNotes = generateMockNotes(countAddItems);
     await db.insert(schema.notes).values(mockNotes);
 
-    console.log('✅ Seed completed! Inserted', mockNotes.length, 'notes.')
+    console.log('✅ Seed completed! Inserted', mockNotes.length, 'notes.');
   } catch (error) {
     console.error('❌ Seed failed:', error);
     throw error;

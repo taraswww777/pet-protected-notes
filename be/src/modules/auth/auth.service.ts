@@ -5,7 +5,8 @@ import bcrypt from 'bcrypt';
 import { InvalidCredentialsError } from '../../errors';
 import { JWT_SECRET } from '../../constants';
 import { ResetPasswordBody, UserDTO } from '../../db/schemas';
-import { randomInt } from 'crypto'; // Добавьте эту строку
+import { randomInt } from 'crypto';
+import { hashingPassword } from './auth.utils'; // Добавьте эту строку
 
 export class AuthService {
   private resetCodes = new Map<string, { code: string; expiresAt: Date }>();
@@ -48,9 +49,7 @@ export class AuthService {
       return false;
     }
 
-    const salt = await bcrypt.genSalt();
-
-    const hashedPassword = await bcrypt.hash(data.password, salt);
+    const hashedPassword = await hashingPassword(data.password);
 
     await db.insert(schema.users).values({
       login: data.login,
