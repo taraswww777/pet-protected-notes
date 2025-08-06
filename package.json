@@ -29,7 +29,7 @@
     "docker:dev": "docker-compose up -d",
     "docker:start": "docker-compose up",
     "docker:start3": "docker-compose build",
-    "docker:build": "docker build -t protected-notes .",
+    "docker:build": "docker-compose -t protected-notes .",
     "docker:stop": "docker-compose down",
     "docker:restart": "docker:stop && docker:dev"
   },
