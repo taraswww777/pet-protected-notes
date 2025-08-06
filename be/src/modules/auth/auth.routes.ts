@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 
 import { RequestWithBody } from '../../types/common';
 import { schema } from '../../db';
-import { middlewareVerifyJWT } from '../../middleware/middlewareVerifyJWT';
+import { middlewareVerifyJWT } from './auth.middleware';
 
 export async function authRoutes(server: FastifyInstance) {
   const authController = new AuthController(new AuthService());

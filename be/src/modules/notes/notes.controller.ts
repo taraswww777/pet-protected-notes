@@ -3,6 +3,7 @@ import { NotesService } from './notes.service';
 
 import { PaginationParams, RequestWithBody, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
+import { getCurrentUserId } from '../auth';
 
 export class NotesController {
   constructor(private readonly notesService: NotesService) {
@@ -11,8 +12,8 @@ export class NotesController {
   async getAll(request: FastifyRequest<{ Querystring: PaginationParams }>) {
     const page = request.query.page ? +request.query.page : undefined;
     const limit = request.query.limit ? +request.query.limit : undefined;
-
-    return this.notesService.getAll({ page, limit });
+    const userId = getCurrentUserId();
+    return this.notesService.getAll({ page, limit }, userId);
   }
 
   async getById(
@@ -20,7 +21,8 @@ export class NotesController {
     reply: FastifyReply,
   ) {
     const id = Number(request.params.id);
-    const note = await this.notesService.getById(id);
+    const userId = getCurrentUserId();
+    const note = await this.notesService.getById(id, userId);
 
     if (!note) {
       return reply.code(404).send({ error: 'Заметка не найдена' });
@@ -31,7 +33,9 @@ export class NotesController {
 
   async create(request: FastifyRequest<RequestWithBody<CreateNoteBody>>) {
     const data = request.body;
-    return this.notesService.create(data);
+    const userId = getCurrentUserId();
+
+    return this.notesService.create(data, userId);
   }
 
   async update(
@@ -39,9 +43,10 @@ export class NotesController {
     reply: FastifyReply,
   ) {
     const id = Number(request.params.id);
-    const data = request.body;
+    const userId = getCurrentUserId();
 
-    const updatedNote = await this.notesService.update(id, data);
+    const updatedNote = await this.notesService.update(id, request.body, userId);
+
     if (!updatedNote) {
       return reply.code(404).send({ error: 'Заметка не найдена' });
     }
@@ -55,7 +60,10 @@ export class NotesController {
   ) {
     const id = Number(request.params.id);
 
-    const success = await this.notesService.delete(id);
+    const userId = getCurrentUserId();
+
+    const success = await this.notesService.delete(id, userId);
+
     if (!success) {
       return reply.code(404).send({ error: 'Заметка не найдена' });
     }
