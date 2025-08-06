@@ -28,8 +28,7 @@
     "fe:preview": "npm -w protected-notes-fe run preview",
     "docker:dev": "docker-compose up -d",
     "docker:start": "docker-compose up",
-    "docker:start3": "docker-compose build",
-    "docker:build": "docker build -t protected-notes .",
+    "docker:build": "docker-compose build",
     "docker:stop": "docker-compose down",
     "docker:restart": "docker:stop && docker:dev"
   },
