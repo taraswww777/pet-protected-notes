@@ -1,33 +1,47 @@
 import { FastifyInstance } from 'fastify';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-
-import { RequestWithBody } from '../../types/common';
-import { schema } from '../../db';
 import { middlewareVerifyJWT } from '../../middleware/middlewareVerifyJWT';
+import {
+  ChangePasswordBody, ChangePasswordSchema,
+  ForgotPasswordBody, ForgotPasswordSchema,
+  LoginUserBody,
+  LoginUserSchema, RegisterUserBody, RegisterUserSchema,
+  ResetPasswordBody, ResetPasswordSchema,
+} from '../../db/zod/users.zod';
 
 export async function authRoutes(server: FastifyInstance) {
   const authController = new AuthController(new AuthService());
 
-  server.post<RequestWithBody<schema.LoginUserBody>>('/login', (req, reply) => authController.login(req, reply));
-  server.post<RequestWithBody<schema.LoginUserBody>>('/register', (req, reply) => authController.register(req, reply));
+  server.post<{ Body: LoginUserBody }>('/login', {
+    schema: { body: LoginUserSchema },
+    handler: (req, reply) => authController.login(req, reply),
+  });
+
+  server.post<{ Body: RegisterUserBody }>('/register', {
+    schema: { body: RegisterUserSchema },
+    handler: (req, reply) => authController.register(req, reply),
+  });
+
+  // Аналогично для остальных роутов:
+  server.put<{ Body: ChangePasswordBody }>('/change-password', {
+    schema: { body: ChangePasswordSchema },
+    preHandler: middlewareVerifyJWT,
+    handler: (req, reply) => authController.changePassword(req, reply),
+  });
+
+  server.post<{ Body: ForgotPasswordBody }>('/forgot-password', {
+    schema: { body: ForgotPasswordSchema },
+    handler: (req, reply) => authController.forgotPassword(req, reply),
+  });
+
+  server.post<{ Body: ResetPasswordBody }>('/reset-password', {
+    schema: { body: ResetPasswordSchema },
+    handler: (req, reply) => authController.resetPassword(req, reply),
+  });
 
   server.get('/current-user-info',
     { preHandler: middlewareVerifyJWT },
     (req, reply) => authController.currentUserInfo(req, reply),
-  );
-  server.put<RequestWithBody<schema.ChangePasswordBody>>('/change-password',
-    { preHandler: middlewareVerifyJWT },
-    (req, reply) => authController.changePassword(req, reply),
-  );
-
-  server.post<RequestWithBody<schema.ForgotPasswordBody>>(
-    '/forgot-password',
-    (req, reply) => authController.forgotPassword(req, reply)
-  );
-
-  server.post<RequestWithBody<schema.ResetPasswordBody>>(
-    '/reset-password',
-    (req, reply) => authController.resetPassword(req, reply)
   );
 }

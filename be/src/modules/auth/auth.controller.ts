@@ -1,15 +1,22 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthService } from './auth.service';
-import { RequestWithBody } from '../../types/common';
-import { schema } from '../../db';
+import {
+  LoginUserBody,
+  RegisterUserBody,
+  ChangePasswordBody,
+  ForgotPasswordBody,
+  ResetPasswordBody,
+} from '../../db/zod/users.zod';
 import { InvalidCredentialsError } from '../../errors';
 
 export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
 
-
-  async login(request: FastifyRequest<RequestWithBody<schema.LoginUserBody>>, reply: FastifyReply) {
+  async login(
+    request: FastifyRequest<{ Body: LoginUserBody }>,
+    reply: FastifyReply,
+  ) {
     const data = request.body;
     try {
       const user = await this.authService.login(data);
@@ -22,7 +29,10 @@ export class AuthController {
     }
   }
 
-  async register(request: FastifyRequest<RequestWithBody<schema.RegisterUserBody>>, reply: FastifyReply) {
+  async register(
+    request: FastifyRequest<{ Body: RegisterUserBody }>,
+    reply: FastifyReply,
+  ) {
     const data = request.body;
     try {
       const user = await this.authService.register(data);
@@ -37,7 +47,6 @@ export class AuthController {
 
   async currentUserInfo(request: FastifyRequest, reply: FastifyReply) {
     try {
-      // Получаем userId из верифицированного JWT (middlewareVerifyJWT уже добавил его в request)
       const userId = (request.user as { userId: number })?.userId;
 
       if (!userId) {
@@ -56,9 +65,8 @@ export class AuthController {
     }
   }
 
-  // В auth.controller.ts добавить:
   async changePassword(
-    request: FastifyRequest<RequestWithBody<schema.ChangePasswordBody>>,
+    request: FastifyRequest<{ Body: ChangePasswordBody }>,
     reply: FastifyReply,
   ) {
     const userId = (request.user as { userId: number })?.userId;
@@ -83,7 +91,7 @@ export class AuthController {
   }
 
   async forgotPassword(
-    request: FastifyRequest<RequestWithBody<schema.ForgotPasswordBody>>,
+    request: FastifyRequest<{ Body: ForgotPasswordBody }>,
     reply: FastifyReply,
   ) {
     try {
@@ -96,7 +104,7 @@ export class AuthController {
   }
 
   async resetPassword(
-    request: FastifyRequest<RequestWithBody<schema.ResetPasswordBody>>,
+    request: FastifyRequest<{ Body: ResetPasswordBody }>,
     reply: FastifyReply,
   ) {
     try {
@@ -109,5 +117,4 @@ export class AuthController {
       return reply.code(500).send({ error: 'Ошибка сервера' });
     }
   }
-
 }
