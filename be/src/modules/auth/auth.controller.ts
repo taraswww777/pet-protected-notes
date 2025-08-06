@@ -19,7 +19,7 @@ export class AuthController {
   ) {
     const data = request.body;
     try {
-      const user = await this.authService.login(data);
+      const [user] = await this.authService.login(data);
       if (!user) {
         return reply.code(401).send({ error: 'Неверные учетные данные' });
       }

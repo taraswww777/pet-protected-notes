@@ -5,7 +5,7 @@ import { middlewareVerifyJWT } from '../../middleware/middlewareVerifyJWT';
 import {
   ChangePasswordBody, ChangePasswordSchema,
   ForgotPasswordBody, ForgotPasswordSchema,
-  LoginUserBody,
+  LoginUserBody, LoginUserFastifySchema,
   LoginUserSchema, RegisterUserBody, RegisterUserSchema,
   ResetPasswordBody, ResetPasswordSchema,
 } from '../../db/zod/users.zod';
@@ -14,7 +14,7 @@ export async function authRoutes(server: FastifyInstance) {
   const authController = new AuthController(new AuthService());
 
   server.post<{ Body: LoginUserBody }>('/login', {
-    schema: { body: LoginUserSchema },
+    schema: { body: LoginUserFastifySchema },
     handler: (req, reply) => authController.login(req, reply),
   });
 
