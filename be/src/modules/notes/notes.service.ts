@@ -29,11 +29,7 @@ export class NotesService {
     const totalPages = Math.ceil(total / limit);
 
     return {
-      items: notes.map((note) => ({
-        id: note.id,
-        title: note.title,
-        content: note.content,
-      })),
+      items: notes,
       countItems: notes.length,
       total: +total,
       currentPage: page,
@@ -53,26 +49,35 @@ export class NotesService {
   }
 
 
-  async create(data: schema.NoteInsertDTO): Promise<schema.NoteDTO> {
+  async create(
+    data: Partial<Omit<schema.NoteInsertDTO, 'user_id'>>,
+    user_id: schema.NoteInsertDTO['user_id']
+  ): Promise<schema.NoteDTO> {
+    const value = { ...data, user_id } as schema.NoteInsertDTO;
+
     const [note] = await db.insert(schema.notes)
-      .values(data)
+      .values(value)
       .returning();
 
     return note;
   }
 
-  async update(id: number, data: Partial<schema.NoteInsertDTO>): Promise<schema.NoteDTO | undefined> {
+  async update(
+    id: number,
+    data: Partial<Omit<schema.NoteInsertDTO, 'user_id'>>,
+    user_id: schema.NoteInsertDTO['user_id']
+  ): Promise<schema.NoteDTO | undefined> {
     const [updatedNote] = await db.update(schema.notes)
       .set(data)
-      .where(eq(schema.notes.id, id))
+      .where(eq(schema.notes.id, id) && eq(schema.notes.user_id, user_id))
       .returning();
 
     return updatedNote;
   }
 
-  async delete(id: number): Promise<schema.NoteDTO | undefined> {
+  async delete(id: number, user_id: schema.NoteInsertDTO['user_id']): Promise<schema.NoteDTO | undefined> {
     const [deletedNote] = await db.delete(schema.notes)
-      .where(eq(schema.notes.id, id))
+      .where(eq(schema.notes.id, id) && eq(schema.notes.user_id, user_id))
       .returning();
 
     return deletedNote;

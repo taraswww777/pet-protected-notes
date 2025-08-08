@@ -6,7 +6,8 @@ import { InvalidCredentialsError } from '../../errors';
 import { JWT_SECRET } from '../../constants';
 import { ResetPasswordBody, UserDTO } from '../../db/schemas';
 import { randomInt } from 'crypto';
-import { hashingPassword } from './auth.utils'; // Добавьте эту строку
+import { hashingPassword } from './auth.utils';
+import { TokenInfo } from './auth.types'; // Добавьте эту строку
 
 export class AuthService {
   private resetCodes = new Map<string, { code: string; expiresAt: Date }>();
@@ -31,9 +32,11 @@ export class AuthService {
       return undefined;
     }
 
+    const tokenInfo: TokenInfo = { userId: user.id }
+
     // 3. Генерируем JWT-токен
     const token = jwt.sign(
-      { userId: user.id }, // Payload
+      tokenInfo,
       JWT_SECRET!, // Секретный ключ из .env
       { expiresIn: '1w' }, // Время жизни токена
     );

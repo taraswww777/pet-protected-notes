@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { RequestWithBody } from '../../types/common';
 import { schema } from '../../db';
 import { InvalidCredentialsError } from '../../errors';
+import { getCurrentUserId } from './auth.middleware';
 
 export class AuthController {
   constructor(private readonly authService: AuthService) {
@@ -37,8 +38,7 @@ export class AuthController {
 
   async currentUserInfo(request: FastifyRequest, reply: FastifyReply) {
     try {
-      // Получаем userId из верифицированного JWT (middlewareVerifyJWT уже добавил его в request)
-      const userId = (request.user as { userId: number })?.userId;
+      const userId = getCurrentUserId();
 
       if (!userId) {
         return reply.code(401).send({ error: 'Не авторизован' });
