@@ -4,7 +4,7 @@ import { NotesService } from './notes.service';
 
 import { RequestWithBody, RouteWithPagination, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
-import { middlewareVerifyJWT } from '../../middleware/middlewareVerifyJWT';
+import { middlewareVerifyJWT } from '../auth';
 
 export async function notesRoutes(server: FastifyInstance) {
   // Добавляем middlewareVerifyJWT ко всем маршрутам
