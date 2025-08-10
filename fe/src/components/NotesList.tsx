@@ -48,15 +48,17 @@ export const NotesList: React.FC = () => {
           <p className="text-gray-600 mt-2">{item.content}</p>
         </div>
       ))}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        hasNextPage={hasNextPage}
-        hasPreviousPage={hasPreviousPage}
-        onPageSizeChange={setPageSize}
-        pageSize={pageSize}
-      />
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          onPageSizeChange={setPageSize}
+          pageSize={pageSize}
+        />
+      )}
     </div>
   );
 };
