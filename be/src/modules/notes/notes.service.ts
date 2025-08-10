@@ -1,6 +1,6 @@
 import { PaginatedResponse, PaginationParams } from '../../types/common';
 import { db, schema } from '../../db';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 
 export class NotesService {
@@ -43,10 +43,13 @@ export class NotesService {
   }
 
   async getById(id: number, user_id: schema.NoteInsertDTO['user_id']) {
+
     const [note] = await db.select().from(schema.notes)
-      .where(eq(schema.notes.id, id) && eq(schema.notes.user_id, user_id))
-      .limit(1)
-      .execute();
+      .where(and(
+        eq(schema.notes.id, id),
+        eq(schema.notes.user_id, user_id),
+      ))
+      .limit(1).execute();
 
     return note;
   }
@@ -72,7 +75,10 @@ export class NotesService {
   ): Promise<schema.NoteDTO | undefined> {
     const [updatedNote] = await db.update(schema.notes)
       .set(data)
-      .where(eq(schema.notes.id, id) && eq(schema.notes.user_id, user_id))
+      .where(and(
+        eq(schema.notes.id, id),
+        eq(schema.notes.user_id, user_id),
+      ))
       .returning();
 
     return updatedNote;
@@ -80,7 +86,10 @@ export class NotesService {
 
   async delete(id: number, user_id: schema.NoteInsertDTO['user_id']): Promise<schema.NoteDTO | undefined> {
     const [deletedNote] = await db.delete(schema.notes)
-      .where(eq(schema.notes.id, id) && eq(schema.notes.user_id, user_id))
+      .where(and(
+        eq(schema.notes.id, id),
+        eq(schema.notes.user_id, user_id),
+      ))
       .returning();
 
     return deletedNote;
