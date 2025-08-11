@@ -15,6 +15,7 @@ import {
   TwoFAPage,
   UserPage,
   ResetPasswordPage,
+  EditUserPage,
 } from './modules/auth';
 import { NoteCreatePage, NoteEditPage, NotesListPage, NoteViewPage } from './modules/notes';
 
@@ -31,6 +32,7 @@ export const Router = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="/user/edit" element={<EditUserPage />} />
           <Route path="/user/change-password" element={<ChangePasswordPage />} />
 
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />

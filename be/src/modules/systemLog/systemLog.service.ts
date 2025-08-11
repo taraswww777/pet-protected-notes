@@ -9,8 +9,8 @@ export class SystemLogService {
   async logEvent(
     eventData: Omit<schema.SystemLogInsert, 'metadata'>,
     request?: FastifyRequest,
-  ): Promise<schema.SystemLog[]> {
-    return db.insert(schema.systemLogs)
+  ) {
+    void db.insert(schema.systemLogs)
       .values({
         ...eventData,
         metadata: this.enrichMetadata(request),
@@ -18,8 +18,8 @@ export class SystemLogService {
       .execute();
   }
 
-  async getLogsByEventType(eventType: keyof typeof schema.LogLevel, paginationParams: PaginationParams = {}): Promise<PaginatedResponse<schema.SystemLog>> {
-    return PaginationUtils.paginate<schema.SystemLog>(schema.systemLogs, {
+  async getLogsByEventType(eventType: keyof typeof schema.LogLevel, paginationParams: PaginationParams = {}): Promise<PaginatedResponse<schema.SystemLogSelect>> {
+    return PaginationUtils.paginate<schema.SystemLogSelect>(schema.systemLogs, {
       whereCondition: eq(schema.systemLogs.eventType, eventType),
       orderBy: desc(schema.systemLogs.attemptTime),
       paginationParams,
