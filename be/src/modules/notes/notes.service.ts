@@ -1,53 +1,27 @@
 import { PaginatedResponse, PaginationParams } from '../../types/common';
 import { db, schema } from '../../db';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import { PaginationUtils } from '../../utils/PaginationUtils';
 
 
 export class NotesService {
   async getAll(
-    {
-      page = 1,
-      limit = 10,
-    }: PaginationParams = {},
-    user_id: schema.NoteInsertDTO['user_id'],
+    paginationParams: PaginationParams = {},
+    userId: schema.NoteInsertDTO['userId'],
   ): Promise<PaginatedResponse<schema.NoteDTO>> {
-    const offset = (page - 1) * limit;
 
-    const [notes, total] = await Promise.all([
-      db.select()
-        .from(schema.notes)
-        .where(eq(schema.notes.user_id, user_id))
-        .limit(limit)
-        .offset(offset)
-        .execute(),
-
-      db.select({
-        count: sql<number>`count(id)`,
-      })
-        .from(schema.notes)
-        .where(eq(schema.notes.user_id, user_id))
-        .then((res) => res[0]?.count || 0),
-    ]);
-
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      items: notes,
-      countItems: notes.length,
-      total: +total,
-      currentPage: page,
-      totalPages,
-      hasNext: page < totalPages,
-      hasPrevious: page > 1,
-    };
+    return PaginationUtils.paginate<schema.NoteDTO>(schema.notes, {
+      paginationParams,
+      whereCondition: eq(schema.notes.userId, userId)
+    });
   }
 
-  async getById(id: number, user_id: schema.NoteInsertDTO['user_id']) {
+  async getById(id: number, userId: schema.NoteInsertDTO['userId']) {
 
     const [note] = await db.select().from(schema.notes)
       .where(and(
         eq(schema.notes.id, id),
-        eq(schema.notes.user_id, user_id),
+        eq(schema.notes.userId, userId),
       ))
       .limit(1).execute();
 
@@ -56,10 +30,10 @@ export class NotesService {
 
 
   async create(
-    data: Partial<Omit<schema.NoteInsertDTO, 'user_id'>>,
-    userId: schema.NoteInsertDTO['user_id'],
+    data: Partial<Omit<schema.NoteInsertDTO, 'userId'>>,
+    userId: schema.NoteInsertDTO['userId'],
   ): Promise<schema.NoteDTO> {
-    const value = { ...data, user_id: userId } as schema.NoteInsertDTO;
+    const value = { ...data, userId: userId } as schema.NoteInsertDTO;
 
     const [note] = await db.insert(schema.notes)
       .values(value)
@@ -70,25 +44,25 @@ export class NotesService {
 
   async update(
     id: number,
-    data: Partial<Omit<schema.NoteInsertDTO, 'user_id'>>,
-    user_id: schema.NoteInsertDTO['user_id'],
+    data: Partial<Omit<schema.NoteInsertDTO, 'userId'>>,
+    userId: schema.NoteInsertDTO['userId'],
   ): Promise<schema.NoteDTO | undefined> {
     const [updatedNote] = await db.update(schema.notes)
       .set(data)
       .where(and(
         eq(schema.notes.id, id),
-        eq(schema.notes.user_id, user_id),
+        eq(schema.notes.userId, userId),
       ))
       .returning();
 
     return updatedNote;
   }
 
-  async delete(id: number, user_id: schema.NoteInsertDTO['user_id']): Promise<schema.NoteDTO | undefined> {
+  async delete(id: number, userId: schema.NoteInsertDTO['userId']): Promise<schema.NoteDTO | undefined> {
     const [deletedNote] = await db.delete(schema.notes)
       .where(and(
         eq(schema.notes.id, id),
-        eq(schema.notes.user_id, user_id),
+        eq(schema.notes.userId, userId),
       ))
       .returning();
 
