@@ -5,7 +5,7 @@ import { seedGenerator } from '../seedGenerator';
 const generateMockNote = async (): Promise<schema.NoteInsertDTO> => ({
   title: faker.lorem.sentence({ min: 2, max: 5 }),
   content: faker.lorem.paragraphs({ min: 1, max: 3 }),
-  user_id: faker.number.int({ min: 1, max: 10 }),
+  userId: faker.number.int({ min: 1, max: 10 }),
 });
 
 // Основная функция сидинга

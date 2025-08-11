@@ -6,7 +6,7 @@ export const notes = pgTable('notes', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   content: text('content'),
-  user_id: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
 });
 
 /** Тип данных для результатов SELECT-запросов к таблице `notes`. */
