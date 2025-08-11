@@ -21,5 +21,5 @@ export const systemLogs = pgTable('system_logs', {
   data: jsonb('data'), // 'Любые дополнительные метаданные' указываются потребителем сервиса SystemLogService
 });
 
-export type SystemLog = typeof systemLogs.$inferSelect;
+export type SystemLogSelect = typeof systemLogs.$inferSelect;
 export type SystemLogInsert = typeof systemLogs.$inferInsert;
