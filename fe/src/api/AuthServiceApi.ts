@@ -1,4 +1,5 @@
 import { axiosInstance } from './asiosInstanse.ts';
+import { schema } from 'protected-notes-be/src/db';
 
 export class AuthServiceApi {
   static login(body: { login: string, password: string }) {
@@ -15,6 +16,10 @@ export class AuthServiceApi {
 
   static getCurrentUserInfoDetail() {
     return axiosInstance.get(`/api/user-info`);
+  }
+
+  static updateUserInfo(body: Partial<schema.UserInfoSelect>) {
+    return axiosInstance.put(`/api/user-info`, body);
   }
 
   static changePassword(body: { oldPassword: string; newPassword: string }) {
