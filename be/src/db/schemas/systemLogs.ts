@@ -1,6 +1,5 @@
 import { jsonb, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { enumToPgEnum } from '../utils';
-import { users } from './users';
 
 export const LogLevel = {
   INFO: 'INFO',
@@ -18,7 +17,8 @@ export const systemLogs = pgTable('system_logs', {
   logLevel: logLevelPgEnum('log_level').notNull().default(LogLevel.INFO),
   attemptTime: timestamp('attempt_time').defaultNow().notNull(),
   eventType: text('event_type').notNull(), // 'Тип события: auth/login, auth/register, user/update и т.д.'
-  metadata: jsonb('metadata'), // 'Любые дополнительные метаданные'
+  metadata: jsonb('metadata').notNull(), // Добавляются в SystemLogService
+  data: jsonb('data'), // 'Любые дополнительные метаданные' указываются потребителем сервиса SystemLogService
 });
 
 export type SystemLog = typeof systemLogs.$inferSelect;

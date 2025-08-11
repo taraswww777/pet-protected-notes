@@ -8,11 +8,11 @@ export class SystemLogController {
   private readonly systemLogService = new SystemLogService();
 
   async logEvent(request: FastifyRequest<RequestWithBody<schema.SystemLogInsert>>) {
-    return this.systemLogService.logEvent(request.body);
+    return this.systemLogService.logEvent(request.body, request);
   }
 
   async getByEventType(
-    request: FastifyRequest<{ Querystring: GetByEventTypeQuerystring }>
+    request: FastifyRequest<{ Querystring: GetByEventTypeQuerystring }>,
   ) {
     const { eventType, page, limit } = request.query;
 

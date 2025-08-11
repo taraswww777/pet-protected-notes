@@ -7,12 +7,20 @@ import { JWT_SECRET } from '../../constants';
 import { ResetPasswordBody, UserDTO } from '../../db/schemas';
 import { randomInt } from 'crypto';
 import { hashingPassword } from './auth.utils';
-import { TokenInfo } from './auth.types'; // Добавьте эту строку
+import { TokenInfo } from './auth.types';
+import { FastifyRequest } from 'fastify';
+import { BaseService } from '../../utils/BaseService';
 
-export class AuthService {
+export class AuthService extends BaseService {
   private resetCodes = new Map<string, { code: string; expiresAt: Date }>();
 
-  async login(data: schema.LoginUserBody): Promise<undefined | schema.LoginUserSuccessResponse> {
+  constructor() {
+    super();
+
+    this.serviceName = 'AuthService';
+  }
+
+  async login(data: schema.LoginUserBody, request?: FastifyRequest): Promise<undefined | schema.LoginUserSuccessResponse> {
 
     // 1. Находим пользователя
     const [user] = await db.select()
@@ -22,6 +30,11 @@ export class AuthService {
       .execute();
 
     if (!user) {
+      void this.logError('login', {
+        login: data.login,
+        message: 'Пользователь не найден',
+      }, request);
+
       return undefined;
     }
 
@@ -29,10 +42,15 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
 
     if (!isPasswordValid) {
+      void this.logError('login', {
+        login: data.login,
+        message: 'Неверный пароль',
+      }, request);
+
       return undefined;
     }
 
-    const tokenInfo: TokenInfo = { userId: user.id }
+    const tokenInfo: TokenInfo = { userId: user.id };
 
     // 3. Генерируем JWT-токен
     const token = jwt.sign(
@@ -41,14 +59,23 @@ export class AuthService {
       { expiresIn: '1w' }, // Время жизни токена
     );
 
+    void this.logSuccess('login', {
+      login: data.login,
+      message: 'Пользователь успешно авторизовался',
+    }, request);
 
     return { token, id: user.id };
   }
 
-  async register(data: schema.RegisterUserBody): Promise<boolean> {
+  async register(data: schema.RegisterUserBody, request?: FastifyRequest): Promise<boolean> {
     const existingUser = await db.select().from(schema.users).where(eq(schema.users.login, data.login)).limit(1).execute();
 
     if (existingUser.length) {
+      void this.logError('register', {
+        login: data.login,
+        message: 'Пользователь с таким email уже существует',
+      }, request);
+
       return false;
     }
 
@@ -59,11 +86,16 @@ export class AuthService {
       password: hashedPassword,
     }).returning().execute();
 
+    void this.logSuccess('register', {
+      login: data.login,
+      message: 'Пользователь успешно зарегистрирован',
+    }, request);
+
     return true;
   }
 
 
-  async userInfo(userId: number): Promise<UserDTO> {
+  async userInfo(userId: number, request?: FastifyRequest): Promise<UserDTO> {
     const [user] = await db
       .select({
         id: schema.users.id,
@@ -74,6 +106,10 @@ export class AuthService {
       .limit(1)
       .execute();
 
+    void this.logInfo('userInfo', {
+      message: `Запрошена информация о пользователе userId: ${userId}. Предоставлена информация ${JSON.stringify(user)}`,
+    }, request);
+
     return user;
   }
 
@@ -82,6 +118,7 @@ export class AuthService {
     userId: number,
     oldPassword: string,
     newPassword: string,
+    request?: FastifyRequest,
   ): Promise<boolean> {
     // 1. Получаем текущего пользователя
     const [user] = await db
@@ -114,12 +151,16 @@ export class AuthService {
     return true;
   }
 
-  async initiatePasswordReset(login: string): Promise<boolean> {
+  async initiatePasswordReset(login: string, request?: FastifyRequest): Promise<boolean> {
     const [user] = await db.select()
       .from(schema.users)
       .where(eq(schema.users.login, login))
       .limit(1)
       .execute();
+
+    void this.logInfo('initiatePasswordReset', {
+      message: `Попытка смены пароля для ${JSON.stringify(login)}`,
+    }, request);
 
     if (!user) return true; // Возвращаем true даже если пользователя нет, чтобы не раскрывать информацию
 
@@ -132,10 +173,14 @@ export class AuthService {
     // В реальном приложении здесь должна быть отправка email
     console.log(`Reset code for ${login}: ${resetCode}`); // Для разработки
 
+    void this.logInfo('initiatePasswordReset', {
+      message: `Запущен процесс мены пароля для пользователя: ${JSON.stringify({ login, id: user.id })}`,
+    }, request);
+
     return true;
   }
 
-  async completePasswordReset(data: ResetPasswordBody): Promise<boolean> {
+  async completePasswordReset(data: ResetPasswordBody, request?: FastifyRequest): Promise<boolean> {
     const resetData = this.resetCodes.get(data.login);
 
     // Проверяем код и время его жизни
@@ -154,6 +199,10 @@ export class AuthService {
 
     // Удаляем использованный код
     this.resetCodes.delete(data.login);
+
+    void this.logInfo('completePasswordReset', {
+      message: `Пароль успешно обновлён: ${JSON.stringify({ login: data.login })}`,
+    }, request);
 
     return true;
   }

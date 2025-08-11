@@ -8,7 +8,8 @@ export async function systemLogRoutes(server: FastifyInstance) {
 
   const systemLogController = new SystemLogController();
 
-  server.post<RequestWithBody<schema.SystemLogInsert>>('/log-event', (req) => systemLogController.logEvent(req));
+  server.post<RequestWithBody<schema.SystemLogInsert>>('/log-event',
+    (req) => systemLogController.logEvent(req));
 
 
   server.get<{ Querystring: GetByEventTypeQuerystring }>(
