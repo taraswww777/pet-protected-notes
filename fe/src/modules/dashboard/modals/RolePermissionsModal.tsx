@@ -8,6 +8,34 @@ type RolePermissionsModalProps = {
   onPermissionsChange: (permissions: string[]) => void;
 };
 
+/**
+ * Упрощенный компонент для управления плоским списком прав
+ * @param {Object} props - Свойства компонента
+ * @param {boolean} props.isOpen - Флаг открытия модального окна
+ * @param {Function} props.onClose - Колбек закрытия модалки
+ * @param {Object} props.role - Данные роли ({id: number, name: string})
+ * @param {Function} props.onPermissionsChange - Колбек изменения прав (принимает string[])
+ *
+ * @example
+ * <RolePermissionsModal
+ *   isOpen={isOpen}
+ *   onClose={() => setIsOpen(false)}
+ *   role={selectedRole}
+ *   onPermissionsChange={(perms) => updateRole(role.id, perms)}
+ * />
+ *
+ * @advantages
+ * - Простота интеграции (работает с массивом строк)
+ * - Малый вес компонента
+ * - Быстрая реализация для базовых сценариев
+ * - Не требует сложной структуры данных
+ *
+ * @disadvantages
+ * - Нет поддержки иерархии прав
+ * - Отсутствует поиск и групповые операции
+ * - Ограниченная расширяемость
+ * - Нет визуальной группировки
+ */
 export const RolePermissionsModal = ({
   isOpen,
   onClose,

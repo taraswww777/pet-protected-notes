@@ -33,3 +33,19 @@ export const XMarkIcon: FC<IconProps> = ({ className = '', ...props }) => (
     {...props}
   />
 );
+
+export const CheckIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--check ${className}`} {...props} />
+);
+
+export const BanIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--ban ${className}`} {...props} />
+);
+
+export const RefreshIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--refresh ${className}`} {...props} />
+);
+
+export const SearchIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--magnify ${className}`} {...props} />
+);
