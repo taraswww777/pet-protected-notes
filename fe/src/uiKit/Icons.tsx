@@ -46,6 +46,19 @@ export const RefreshIcon = ({ className = '', ...props }: IconProps) => (
   <span className={`iconify mdi--refresh ${className}`} {...props} />
 );
 
+export const ClockIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--clock-outline ${className}`} {...props} />
+);
+
+export const DocumentTextIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--text-box-outline ${className}`} {...props} />
+);
+
+
 export const SearchIcon = ({ className = '', ...props }: IconProps) => (
   <span className={`iconify mdi--magnify ${className}`} {...props} />
+);
+
+export const UserIcon = ({ className = '', ...props }: IconProps) => (
+  <span className={`iconify mdi--user ${className}`} {...props} />
 );
