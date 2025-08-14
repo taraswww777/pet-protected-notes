@@ -47,7 +47,7 @@ export const Router = () => {
           <Route path="/notes/:id" element={<NoteViewPage />} />
           <Route path="/notes" element={<NotesListPage />} />
 
-          <Route path="/dashboard" element={<DashboardRouter />} />
+          <Route path="/dashboard/*" element={<DashboardRouter />} />
 
           {/* Запасной маршрут (404) */}
           <Route path="*" element={<NotFoundPage />} />

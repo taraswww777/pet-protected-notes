@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../modules/auth/AuthProvider';
+import { DashboardIcon } from '../uiKit/Icons.tsx';
 
 
 export const Navbar = () => {
@@ -22,7 +23,7 @@ export const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Link to="/dashboard" className="hover:bg-blue-500 px-3 py-2 rounded">
-                <span className="iconify mdi-light--view-dashboard text-2xl"></span>
+                <DashboardIcon />
               </Link>
               <Link to="/notes/create" className="hover:bg-blue-500 px-3 py-2 rounded">
                 New Note
