@@ -18,6 +18,7 @@ import {
   EditUserPage,
 } from './modules/auth';
 import { NoteCreatePage, NoteEditPage, NotesListPage, NoteViewPage } from './modules/notes';
+import { DashboardRouter } from './modules/dashboard';
 
 
 export const Router = () => {
@@ -45,6 +46,8 @@ export const Router = () => {
           <Route path="/notes/:id/edit" element={<NoteEditPage />} />
           <Route path="/notes/:id" element={<NoteViewPage />} />
           <Route path="/notes" element={<NotesListPage />} />
+
+          <Route path="/dashboard" element={<DashboardRouter />} />
 
           {/* Запасной маршрут (404) */}
           <Route path="*" element={<NotFoundPage />} />

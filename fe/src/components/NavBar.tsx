@@ -21,6 +21,9 @@ export const Navbar = () => {
         <div className="flex space-x-4">
           {isAuthenticated ? (
             <>
+              <Link to="/dashboard" className="hover:bg-blue-500 px-3 py-2 rounded">
+                <span className="iconify mdi-light--view-dashboard text-2xl"></span>
+              </Link>
               <Link to="/notes/create" className="hover:bg-blue-500 px-3 py-2 rounded">
                 New Note
               </Link>
