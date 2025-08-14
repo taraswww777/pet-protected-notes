@@ -1,4 +1,4 @@
-import { boolean, integer, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
 import { actions } from './actions';
 import { roles } from './roles';
 

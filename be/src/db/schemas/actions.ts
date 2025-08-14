@@ -1,11 +1,13 @@
 import { integer, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+// import { relations } from 'drizzle-orm';
 
 export const actions = pgTable('actions', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).unique().notNull(),
   code: varchar('code', { length: 100 }).unique().notNull(),
   description: text('description'),
-  parentId: integer('parent_id').references(() => actions.id, { onDelete: 'cascade' }),
+  parentId: integer('parent_id'),
+  // parentId: integer('parent_id').references(() => actions.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
