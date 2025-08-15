@@ -40,21 +40,17 @@ const RolesPage = () => {
 
   const handleSave = async (roleData: { name: string; description: string }) => {
     console.log('roleData:', roleData)
-    if (selectedRole) {
-      // Обновление существующей роли
-      // setRoles(roles.map(r => r.id === selectedRole.id ? { ...r, ...roleData } : r));
-    } else {
-      // Добавление новой роли
-      // const newRole = {
-      //   ...roleData,
-      //   id: Math.max(...roles.map(r => r.id), 0) + 1,
-      //   userCount: 0,
-      // };
-      // setRoles([...roles, newRole]);
+    try {
+      if (selectedRole) {
+        await RoleServiceApi.updateRole(selectedRole.id, roleData);
+      } else {
+        await RoleServiceApi.createRole(roleData);
+      }
+      await loadData();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Ошибка при сохранении роли:', error);
     }
-
-    await loadData();
-    setIsModalOpen(false);
   };
 
   return (

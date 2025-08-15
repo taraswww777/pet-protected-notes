@@ -12,6 +12,10 @@ export class RoleServiceApi {
     return axiosInstance.post('/api/roles/roles', body);
   }
 
+  static updateRole(id: number, body: { name: string; description?: string }) {
+    return axiosInstance.put(`/api/roles/roles/${id}`, body);
+  }
+
   static assignRole(body: AssignRoleToUserBody) {
     return axiosInstance.post('/api/roles/roles/assign', body);
   }
