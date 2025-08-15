@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { PencilIcon, TrashIcon, CogIcon, PlusIcon, UsersIcon } from '../../../uiKit/Icons';
-
-type Role = {
-  id: number;
-  name: string;
-  description: string;
-  userCount: number;
-};
+import { UIRole } from '../../../types/UIRole.ts';
 
 type RolesTableProps = {
-  roles: Role[];
+  roles: UIRole[];
   onAddRole: () => void;
-  onEditRole: (role: Role) => void;
+  onEditRole: (role: UIRole) => void;
   onDeleteRole: (id: number) => void;
 };
 
