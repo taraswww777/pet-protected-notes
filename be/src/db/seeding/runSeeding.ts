@@ -1,5 +1,6 @@
 import { seedingNotes } from './seeds/seedingNotes';
 import { seedingUsers } from './seeds/seedingUsers';
+import { seedingRoles } from './seeds/seedingRoles';
 
 export const runSeeding = async () => {
 
@@ -7,6 +8,7 @@ export const runSeeding = async () => {
   const seeds = [
     seedingUsers,
     seedingNotes,
+    seedingRoles,
   ];
 
   for (const seed of seeds) {
