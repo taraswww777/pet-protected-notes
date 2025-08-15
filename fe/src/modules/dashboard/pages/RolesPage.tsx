@@ -1,41 +1,59 @@
 import { useState } from 'react';
 import { RolesTable } from '../components/RolesTable';
 import { RoleInfoModal } from '../modals/RoleInfoModal.tsx';
+import { RoleServiceApi } from '../../../api/RoleServiceApi.ts';
+import { useMountEffect } from '../../../hooks/useMountEffect.ts';
+import { UIRole } from '../../../types/UIRole.ts';
 
-type Role = {
-  id: number;
-  name: string;
-  description: string;
-  userCount: number;
-};
 
 const RolesPage = () => {
-  const [roles, setRoles] = useState<Role[]>([
-    { id: 1, name: 'Администратор', description: 'Полный доступ', userCount: 5 },
-    { id: 2, name: 'Модератор', description: 'Ограниченные права', userCount: 12 },
-    { id: 3, name: 'Пользователь', description: 'Базовые права', userCount: 154 },
-  ]);
+  const [roles, setRoles] = useState<UIRole[]>([]);
 
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [selectedRole, setSelectedRole] = useState<UIRole | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const loadData = async () => {
+    try {
+      const rolesResponse = await RoleServiceApi.getRoles();
+
+      const countsResponse = await RoleServiceApi.getUsersCountByRoles(rolesResponse.map(r => r.id));
+
+      const rolesWithCounts = rolesResponse.map(role => ({
+        ...role,
+        userCount: countsResponse.find(c => c.roleId === role.id)?.userCount || 0,
+      }));
+
+      setRoles(rolesWithCounts);
+    } catch (error) {
+      console.error('Ошибка при получении данных:', error);
+    }
+  }
+
+  useMountEffect(() => {
+    void loadData();
+  });
+
 
   const handleDelete = (id: number) => {
     setRoles(roles.filter(role => role.id !== id));
   };
 
-  const handleSave = (roleData: { name: string; description: string }) => {
+  const handleSave = async (roleData: { name: string; description: string }) => {
+    console.log('roleData:', roleData)
     if (selectedRole) {
       // Обновление существующей роли
-      setRoles(roles.map(r => r.id === selectedRole.id ? { ...r, ...roleData } : r));
+      // setRoles(roles.map(r => r.id === selectedRole.id ? { ...r, ...roleData } : r));
     } else {
       // Добавление новой роли
-      const newRole = {
-        ...roleData,
-        id: Math.max(...roles.map(r => r.id), 0) + 1,
-        userCount: 0,
-      };
-      setRoles([...roles, newRole]);
+      // const newRole = {
+      //   ...roleData,
+      //   id: Math.max(...roles.map(r => r.id), 0) + 1,
+      //   userCount: 0,
+      // };
+      // setRoles([...roles, newRole]);
     }
+
+    await loadData();
     setIsModalOpen(false);
   };
 
@@ -49,7 +67,7 @@ const RolesPage = () => {
           setSelectedRole(null);
           setIsModalOpen(true);
         }}
-        onEditRole={(role: Role) => {
+        onEditRole={(role: UIRole) => {
           setSelectedRole(role);
           setIsModalOpen(true);
         }}

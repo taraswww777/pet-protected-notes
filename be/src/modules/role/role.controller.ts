@@ -10,6 +10,28 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {
   }
 
+  async getRoles(_request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const roles = await this.roleService.getRoles();
+      return reply.send(roles);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to get roles' });
+    }
+  }
+
+  async getUsersCountByRoles(
+    request: FastifyRequest<{ Querystring: { roleIds: number[] } }>,
+    reply: FastifyReply
+  ) {
+    try {
+      const counts = await this.roleService.getUsersCountByRoles(request.query.roleIds);
+      return reply.send(counts);
+    } catch (error) {
+      console.log('error:', error)
+      return reply.code(500).send({ error: 'Failed to get users count' });
+    }
+  }
+
   async createRole(request: FastifyRequest<{ Body: { name: string; description?: string } }>, reply: FastifyReply) {
     try {
       const role = await this.roleService.createRole(request.body);

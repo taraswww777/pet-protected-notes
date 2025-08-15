@@ -1,7 +1,7 @@
 import { db } from '../../db';
-import { eq, and } from 'drizzle-orm';
-import type { AssignRoleToUserBody, UpdatePermissionBody, CheckPermissionParams } from './role.types';
-import { roles, actions, rolePermissions, userRoles, ActionsInsert, RolesInsert } from '../../db/schemas';
+import { and, eq, inArray, sql } from 'drizzle-orm';
+import type { AssignRoleToUserBody, CheckPermissionParams, UpdatePermissionBody } from './role.types';
+import { actions, ActionsInsert, rolePermissions, roles, RolesInsert, userRoles } from '../../db/schemas';
 
 export class RoleService {
   // Роли
@@ -11,6 +11,22 @@ export class RoleService {
       .returning();
 
     return role;
+  }
+
+  async getRoles() {
+    return db.select().from(roles);
+  }
+
+  async getUsersCountByRoles(roleIds: number[]) {
+    if (!roleIds.length) return [];
+
+    return await db.select({
+      roleId: userRoles.roleId,
+      userCount: sql<number>`count(${userRoles.userId})`
+    })
+      .from(userRoles)
+      .where(inArray(userRoles.roleId, roleIds))
+      .groupBy(userRoles.roleId);
   }
 
   async deleteRole(roleId: number) {

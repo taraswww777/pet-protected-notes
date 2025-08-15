@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { BaseModal } from '../../../uiKit/components/BaseModal';
+import { UIRole } from '../../../types/UIRole.ts';
 
 type RoleInfoModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  role: { id: number; name: string; description: string } | null;
+  role: UIRole | null;
   onSave: (roleData: { name: string; description: string }) => void;
 };
 
