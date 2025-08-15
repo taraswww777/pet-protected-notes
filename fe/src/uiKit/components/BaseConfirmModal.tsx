@@ -38,7 +38,7 @@ export const BaseConfirmModal: React.FC<BaseConfirmModalProps> = ({
   );
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} footer={footer}>
+    <BaseModal isOpen={isOpen} onClose={onClose} footer={footer} title={title}>
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">{title}</h2>
         <p className="text-gray-600">{message}</p>
