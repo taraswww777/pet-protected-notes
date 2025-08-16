@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BaseModal } from '../../../uiKit/components/BaseModal';
 import { UIRole } from '../../../types/UIRole.ts';
+import { Input } from '../../../uiKit/Input';
+import { Textarea } from '../../../uiKit/Textarea';
 
 type RoleInfoModalProps = {
   isOpen: boolean;
@@ -10,12 +12,36 @@ type RoleInfoModalProps = {
 };
 
 export const RoleInfoModal = ({ isOpen, onClose, role, onSave }: RoleInfoModalProps) => {
-  const [name, setName] = useState(role?.name || '');
-  const [description, setDescription] = useState(role?.description || '');
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+  });
+
+  useEffect(() => {
+    if (role) {
+      setFormData({
+        name: role.name || '',
+        description: role.description || '',
+      });
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+      });
+    }
+  }, [role]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ name, description });
+    onSave(formData);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const footer = (
@@ -46,32 +72,24 @@ export const RoleInfoModal = ({ isOpen, onClose, role, onSave }: RoleInfoModalPr
       maxWidth="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Название роли
-          </label>
-          <input
-            type="text"
-            id="name"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+        <Input
+          label="Название роли"
+          type="text"
+          name="name"
+          id="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
 
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Описание
-          </label>
-          <textarea
-            id="description"
-            rows={3}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
+        <Textarea
+          label="Описание"
+          name="description"
+          id="description"
+          value={formData.description}
+          onChange={handleChange}
+          rows={3}
+        />
       </form>
     </BaseModal>
   );

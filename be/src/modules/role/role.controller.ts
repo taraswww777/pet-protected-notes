@@ -41,6 +41,24 @@ export class RoleController {
     }
   }
 
+  async updateRole(
+    request: FastifyRequest<{
+      Params: { id: number },
+      Body: { name: string; description?: string }
+    }>,
+    reply: FastifyReply
+  ) {
+    try {
+      const role = await this.roleService.updateRole(
+        request.params.id,
+        request.body
+      );
+      return reply.send(role);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to update role' });
+    }
+  }
+
   async assignRole(request: FastifyRequest<{ Body: AssignRoleToUserBody }>, reply: FastifyReply) {
     try {
       await this.roleService.assignRoleToUser(request.body);

@@ -1,7 +1,6 @@
 import { InputVariant } from './Input';
 import React from 'react';
 
-
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
@@ -15,14 +14,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const currentVariant = error ? InputVariant.DANGER : variant;
 
     const variantClasses = {
-      [InputVariant.DEFAULT]: 'border-gray-300 focus:ring-blue-500 focus:border-blue-500',
-      [InputVariant.PRIMARY]: 'border-blue-500 focus:ring-blue-500 focus:border-blue-500',
-      [InputVariant.DANGER]: 'border-red-500 focus:ring-red-500 focus:border-red-500',
-      [InputVariant.SUCCESS]: 'border-green-500 focus:ring-green-500 focus:border-green-500',
+      [InputVariant.DEFAULT]: 'border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500',
+      [InputVariant.PRIMARY]: 'border-blue-500 focus:ring-blue-500 focus:border-blue-500 dark:border-blue-400 dark:focus:ring-blue-400 dark:focus:border-blue-400',
+      [InputVariant.DANGER]: 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-400 dark:focus:ring-red-400 dark:focus:border-red-400',
+      [InputVariant.SUCCESS]: 'border-green-500 focus:ring-green-500 focus:border-green-500 dark:border-green-400 dark:focus:ring-green-400 dark:focus:border-green-400',
     };
 
     return (
-      <div className={`${className}`}>
+      <div className={className}>
         {label && (
           <label
             htmlFor={textareaId}
@@ -42,9 +41,10 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             border ${variantClasses[currentVariant]}
             focus:outline-none focus:ring-2 focus:ring-opacity-50
             disabled:opacity-50 disabled:cursor-not-allowed
-            dark:bg-gray-700 dark:border-gray-600 dark:text-white
+            bg-white dark:bg-gray-700 text-gray-900 dark:text-white
             ${props.disabled ? 'bg-gray-100 dark:bg-gray-800' : ''}
             min-h-[100px]
+            resize-none
           `}
           {...props}
         />

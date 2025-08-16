@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { PencilIcon, TrashIcon, CogIcon, PlusIcon, UsersIcon } from '../../../uiKit/Icons';
+import { PencilIcon, TrashIcon, PlusIcon, UsersIcon } from '../../../uiKit/Icons';
 import { UIRole } from '../../../types/UIRole.ts';
 
 type RolesTableProps = {
@@ -169,13 +169,6 @@ export const RolesTable = ({ roles, onAddRole, onEditRole, onDeleteRole }: Roles
                       title="Удалить"
                     >
                       <TrashIcon className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => onEditRole(role)}
-                      className="text-gray-400 hover:text-blue-600"
-                      title="Настроить права"
-                    >
-                      <CogIcon className="h-5 w-5" />
                     </button>
                   </div>
                 </td>

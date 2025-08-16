@@ -13,6 +13,15 @@ export class RoleService {
     return role;
   }
 
+  async updateRole(id: number, params: { name: string; description?: string }) {
+    const [role] = await db.update(roles)
+      .set(params)
+      .where(eq(roles.id, id))
+      .returning();
+
+    return role;
+  }
+
   async getRoles() {
     return db.select().from(roles);
   }

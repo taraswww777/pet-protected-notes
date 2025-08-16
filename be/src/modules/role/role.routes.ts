@@ -13,6 +13,12 @@ export async function roleRoutes(server: FastifyInstance) {
     (req, reply) => controller.createRole(req, reply)
   );
 
+  server.put<{ Params: { id: number }, Body: { name: string; description?: string } }>(
+    '/roles/:id',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => controller.updateRole(req, reply)
+  );
+
   server.get<{ Querystring: { roleIds: number[] } }>(
     '/roles/users-count',
     { preHandler: middlewareVerifyJWT },
