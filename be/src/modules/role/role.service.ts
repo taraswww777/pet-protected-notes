@@ -13,6 +13,47 @@ export class RoleService {
     return role;
   }
 
+  async deleteRole(roleId: number) {
+    return await db.transaction(async (tx) => {
+      // Проверяем, есть ли пользователи с этой ролью
+      const usersWithRole = await tx.select()
+        .from(userRoles)
+        .where(eq(userRoles.roleId, roleId))
+        .limit(1);
+
+      if (usersWithRole.length > 0) {
+        throw new Error('Cannot delete role: role is assigned to one or more users');
+      }
+
+      // Удаляем связанные разрешения
+      await tx.delete(rolePermissions)
+        .where(eq(rolePermissions.roleId, roleId))
+        .execute();
+
+      // Удаляем саму роль
+      const result = await tx.delete(roles)
+        .where(eq(roles.id, roleId))
+        .returning({ id: roles.id })
+        .execute();
+
+      if (result.length === 0) {
+        throw new Error('Role not found');
+      }
+
+      // Очищаем только релевантную часть кэша
+      this.clearPermissionCacheForRole(roleId);
+
+      return result[0];
+    });
+  }
+
+  private clearPermissionCacheForRole(roleId: number) {
+    this.permissionCache.forEach((userCache, userId) => {
+      // Можно добавить более точную очистку, если известно какие actionCode связаны с roleId
+      userCache.clear();
+    });
+  }
+
   async updateRole(id: number, params: { name: string; description?: string }) {
     const [role] = await db.update(roles)
       .set(params)
@@ -36,10 +77,6 @@ export class RoleService {
       .from(userRoles)
       .where(inArray(userRoles.roleId, roleIds))
       .groupBy(userRoles.roleId);
-  }
-
-  async deleteRole(roleId: number) {
-    await db.delete(roles).where(eq(roles.id, roleId)).execute();
   }
 
   // Действия

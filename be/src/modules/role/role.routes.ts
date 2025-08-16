@@ -25,6 +25,11 @@ export async function roleRoutes(server: FastifyInstance) {
     (req, reply) => controller.getUsersCountByRoles(req, reply)
   );
 
+  server.delete<{ Params: { id: number } }>(
+    '/roles/:id',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => controller.deleteRole(req, reply)
+  );
 
   // Новый маршрут для получения списка ролей
   server.get(

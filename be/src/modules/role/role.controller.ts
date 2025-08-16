@@ -10,6 +10,18 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {
   }
 
+  async deleteRole(
+    request: FastifyRequest<{ Params: { id: number } }>,
+    reply: FastifyReply
+  ) {
+    try {
+      await this.roleService.deleteRole(request.params.id);
+      return reply.send({ success: true });
+    } catch (error) {
+      return reply.code(400).send({ error });
+    }
+  }
+
   async getRoles(_request: FastifyRequest, reply: FastifyReply) {
     try {
       const roles = await this.roleService.getRoles();

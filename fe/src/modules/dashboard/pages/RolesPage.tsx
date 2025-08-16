@@ -4,6 +4,7 @@ import { RoleInfoModal } from '../modals/RoleInfoModal.tsx';
 import { RoleServiceApi } from '../../../api/RoleServiceApi.ts';
 import { useMountEffect } from '../../../hooks/useMountEffect.ts';
 import { UIRole } from '../../../types/UIRole.ts';
+import { BaseConfirmModal } from '../../../uiKit/components/BaseConfirmModal.tsx';
 
 
 const RolesPage = () => {
@@ -11,6 +12,8 @@ const RolesPage = () => {
 
   const [selectedRole, setSelectedRole] = useState<UIRole | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState<number | null>(null);
 
   const loadData = async () => {
     try {
@@ -33,13 +36,26 @@ const RolesPage = () => {
     void loadData();
   });
 
-
   const handleDelete = (id: number) => {
-    setRoles(roles.filter(role => role.id !== id));
+    setRoleToDelete(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (roleToDelete !== null) {
+      try {
+        await RoleServiceApi.deleteRole(roleToDelete);
+        setRoles(roles.filter(role => role.id !== roleToDelete));
+      } catch (error) {
+        console.error('Ошибка при удалении роли:', error);
+      } finally {
+        setIsConfirmModalOpen(false);
+        setRoleToDelete(null);
+      }
+    }
   };
 
   const handleSave = async (roleData: { name: string; description: string }) => {
-    console.log('roleData:', roleData)
     try {
       if (selectedRole) {
         await RoleServiceApi.updateRole(selectedRole.id, roleData);
@@ -56,7 +72,6 @@ const RolesPage = () => {
   return (
     <div className="w-full">
       <h1 className="text-2xl font-bold mb-4">Роли</h1>
-
       <RolesTable
         roles={roles}
         onAddRole={() => {
@@ -74,6 +89,13 @@ const RolesPage = () => {
         onClose={() => setIsModalOpen(false)}
         role={selectedRole}
         onSave={handleSave}
+      />
+      <BaseConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Подтверждение удаления роли"
+        message="Вы уверены, что хотите удалить эту роль?"
       />
     </div>
   );
