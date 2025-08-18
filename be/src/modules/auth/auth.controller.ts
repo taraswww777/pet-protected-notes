@@ -36,7 +36,7 @@ export class AuthController {
     }
   }
 
-  async currentUserInfo(request: FastifyRequest, reply: FastifyReply) {
+  async currentUserInfo(_request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = getCurrentUserId();
 

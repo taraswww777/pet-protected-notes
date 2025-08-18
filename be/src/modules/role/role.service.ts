@@ -1,7 +1,15 @@
-import { db } from '../../db';
+import { db, schema } from '../../db';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import type { AssignRoleToUserBody, CheckPermissionParams, UpdatePermissionBody } from './role.types';
 import { actions, ActionsInsert, rolePermissions, roles, RolesInsert, userRoles } from '../../db/schemas';
+import { PaginatedResponse, PaginationParams } from '../../types/common';
+import { PaginationUtils } from '../../utils/PaginationUtils';
+
+export interface UserWithRolesDTO {
+  userId: number;
+  login: string;
+  roleIds: number[]
+}
 
 export class RoleService {
   // Роли
@@ -11,6 +19,53 @@ export class RoleService {
       .returning();
 
     return role;
+  }
+
+  async getUsers(
+    paginationParams?: PaginationParams
+  ): Promise<PaginatedResponse<UserWithRolesDTO>> {
+
+    // Базовый запрос для данных
+    const baseQuery = db
+      .select({
+        id: schema.users.id,
+        login: schema.users.login,
+        roleId: schema.userRoles.roleId,
+      })
+      .from(schema.users)
+      .leftJoin(schema.userRoles, eq(schema.users.id, schema.userRoles.userId));
+
+    // Запрос для подсчета общего количества
+    const countQuery = db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.users);
+
+    const result = await PaginationUtils.paginate<schema.UserSelect & { roleId?: number }>({
+      baseQuery,
+      countQuery,
+      paginationParams
+    });
+
+    // Группируем записи по userId
+    const groupedMap = result.items.reduce((map, item) => {
+      if (!map.has(item.id)) {
+        map.set(item.id, {
+          userId: item.id,
+          login: item.login,
+          roleIds: []
+        });
+      }
+      if (item?.roleId) {
+        map.get(item.id)!.roleIds.push(item.roleId);
+      }
+      return map;
+    }, new Map<number, UserWithRolesDTO>());
+
+
+    return {
+      ...result,
+      items: Array.from(groupedMap.values())
+    };
   }
 
   async deleteRole(roleId: number) {
@@ -110,8 +165,23 @@ export class RoleService {
   }
 
   // Пользователи
-  async assignRoleToUser({ userId, roleId }: AssignRoleToUserBody) {
-    await db.insert(userRoles).values({ userId, roleId });
+  async assignRoleToUser({ userId, roleIds }: AssignRoleToUserBody) {
+    await db.transaction(async (tx) => {
+      // Удаляем все текущие роли пользователя
+      await tx.delete(userRoles)
+        .where(eq(userRoles.userId, userId))
+        .execute();
+
+      // Добавляем новые роли, если они указаны
+      if (roleIds.length > 0) {
+        await tx.insert(userRoles)
+          .values(roleIds.map(roleId => ({ userId, roleId })))
+          .execute();
+      }
+
+      // Очищаем кэш разрешений для этого пользователя
+      this.permissionCache.delete(userId);
+    });
   }
 
   // В RoleService

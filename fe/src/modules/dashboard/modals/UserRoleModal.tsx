@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { XMarkIcon } from '../../../uiKit/Icons.tsx';
+import { UserWithRolesDTO } from 'protected-notes-be/src/modules/role/index.ts';
+import { Button, ButtonVariant } from '../../../uiKit/Button';
 
 type Role = {
   id: number;
@@ -9,13 +11,9 @@ type Role = {
 type UserRoleModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  user: {
-    id: number;
-    login: string;
-    roles: string[];
-  };
+  user: UserWithRolesDTO;
   allRoles: Role[];
-  onSave: (roles: string[]) => void;
+  onSave: (roleIds: number[]) => void;
 };
 
 export const UserRoleModal: React.FC<UserRoleModalProps> = ({
@@ -25,19 +23,23 @@ export const UserRoleModal: React.FC<UserRoleModalProps> = ({
   allRoles,
   onSave,
 }) => {
-  const [selectedRoles, setSelectedRoles] = React.useState<string[]>(user?.roles || []);
+  const [selectedRoleIds, setSelectedRoleIds] = React.useState<number[]>(user?.roleIds || []);
 
-  const handleRoleChange = (roleName: string) => {
-    setSelectedRoles(prev =>
-      prev.includes(roleName)
-        ? prev.filter(r => r !== roleName)
-        : [...prev, roleName],
+  useEffect(() => {
+    setSelectedRoleIds(user?.roleIds || []);
+  }, [user?.roleIds])
+
+  const handleRoleChange = (roleId: number) => {
+    setSelectedRoleIds(prev =>
+      prev.includes(roleId)
+        ? prev.filter(r => r !== roleId)
+        : [...prev, roleId],
     );
   };
 
   // TODO: #99 UserRoleModal. Добавить валидацию ролей (например, минимально 1 роль должна быть выбрана)
   const handleSave = () => {
-    onSave(selectedRoles);
+    onSave(selectedRoleIds);
     onClose();
   };
 
@@ -60,60 +62,48 @@ export const UserRoleModal: React.FC<UserRoleModalProps> = ({
 
         <div className="p-6">
           <div className="space-y-4">
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
-                Текущие роли:
-              </h3>
-              <p className="text-sm text-gray-500">
-                {user.roles.join(', ') || 'Нет ролей'}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
-                Доступные роли:
-              </h3>
-              <div className="space-y-2">
-                {allRoles.map((role) => (
-                  <div key={role.id} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`role-${role.id}`}
-                      checked={selectedRoles.includes(role.name)}
-                      onChange={() => handleRoleChange(role.name)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label
-                      htmlFor={`role-${role.id}`}
-                      className="ml-2 block text-sm text-gray-700"
-                    >
-                      {role.name}
-                    </label>
-                  </div>
-                ))}
-              </div>
+            <div className="space-y-2">
+              {allRoles.map((role) => (
+                <div key={role.id} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`role-${role.id}`}
+                    checked={selectedRoleIds.includes(role.id)}
+                    onChange={() => handleRoleChange(role.id)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor={`role-${role.id}`}
+                    className="ml-2 block text-sm text-gray-700"
+                  >
+                    {role.name}
+                    {user.roleIds.includes(role.id) && (
+                      <span className="ml-2 text-xs text-green-600">(текущая)</span>
+                    )}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
         <div className="border-t p-4 flex justify-end space-x-3">
-          <button
+          <Button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+            variant={ButtonVariant.NEUTRAL}
           >
             Отмена
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+            variant={ButtonVariant.PRIMARY}
           >
             Сохранить
-          </button>
+          </Button>
         </div>
       </div>
     </div>
   );
 };
-

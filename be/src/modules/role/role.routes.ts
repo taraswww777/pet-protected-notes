@@ -3,9 +3,16 @@ import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 import { middlewareVerifyJWT } from '../auth';
 import { AssignRoleToUserBody, CheckPermissionParams, UpdatePermissionBody } from './role.types';
+import { PaginationParams } from '../../types/common';
 
 export async function roleRoutes(server: FastifyInstance) {
   const controller = new RoleController(new RoleService());
+
+  server.get<{ Querystring: PaginationParams }>(
+    '/users',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => controller.getUsers(req, reply)
+  );
 
   server.post<{ Body: { name: string; description?: string } }>(
     '/roles',

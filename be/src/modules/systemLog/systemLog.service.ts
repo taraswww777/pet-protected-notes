@@ -1,5 +1,5 @@
 import { db, schema } from '../../db';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 import { PaginatedResponse, PaginationParams } from '../../types/common';
 import { PaginationUtils } from '../../utils/PaginationUtils';
 import { FastifyRequest } from 'fastify';
@@ -18,11 +18,26 @@ export class SystemLogService {
       .execute();
   }
 
-  async getLogsByEventType(eventType: keyof typeof schema.LogLevel, paginationParams: PaginationParams = {}): Promise<PaginatedResponse<schema.SystemLogSelect>> {
-    return PaginationUtils.paginate<schema.SystemLogSelect>(schema.systemLogs, {
-      whereCondition: eq(schema.systemLogs.eventType, eventType),
-      orderBy: desc(schema.systemLogs.attemptTime),
+  async getLogsByEventType(
+    eventType: schema.SystemLogSelect['eventType'],
+    paginationParams: PaginationParams = {}
+  ): Promise<PaginatedResponse<schema.SystemLogSelect>> {
+
+    const baseQuery = db
+      .select()
+      .from(schema.systemLogs)
+      .where(eq(schema.systemLogs.eventType, eventType));
+
+    const countQuery = db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.systemLogs)
+      .where(eq(schema.systemLogs.eventType, eventType));
+
+    return PaginationUtils.paginate<schema.SystemLogSelect>({
+      baseQuery,
+      countQuery,
       paginationParams,
+      orderBy: desc(schema.systemLogs.attemptTime)
     });
   }
 

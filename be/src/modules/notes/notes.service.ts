@@ -9,8 +9,7 @@ export class NotesService {
     paginationParams: PaginationParams = {},
     userId: schema.NoteInsertDTO['userId'],
   ): Promise<PaginatedResponse<schema.NoteDTO>> {
-
-    return PaginationUtils.paginate<schema.NoteDTO>(schema.notes, {
+    return PaginationUtils.paginateTable<schema.NoteDTO>(schema.notes, {
       paginationParams,
       whereCondition: eq(schema.notes.userId, userId)
     });

@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { schema } from 'protected-notes-be/src/db';
 
 const UserPage: FC = () => {
-  const [baseUserInfo, setBaseUserInfo] = useState<schema.UserDTO>();
+  const [baseUserInfo, setBaseUserInfo] = useState<schema.UserSelect>();
   const [userInfo, setUserInfo] = useState<Partial<schema.UserInfoSelect>>({});
 
   useEffect(() => {
