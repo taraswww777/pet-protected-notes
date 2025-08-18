@@ -40,4 +40,8 @@ export class RoleServiceApi {
       params: { roleIds },
     }).then(({ data }) => data);
   }
+
+  static deleteRole(id: number) {
+    return axiosInstance.delete(`/api/roles/roles/${id}`);
+  }
 }
