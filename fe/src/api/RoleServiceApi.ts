@@ -7,7 +7,7 @@ import {
 import { AxiosResponse } from 'axios';
 import { schema } from 'protected-notes-be/src/db/index.ts';
 import { PAGE_SIZE_DEFAULT } from '../constants/common.ts';
-import { PaginatedResponse, PaginationParams } from 'protected-notes-be/src/types/common.ts';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { UserWithRolesDTO } from 'protected-notes-be/src/modules/role';
 
 export class RoleServiceApi {

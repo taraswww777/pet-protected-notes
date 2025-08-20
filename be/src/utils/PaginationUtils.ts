@@ -1,10 +1,10 @@
 import { db } from '../db';
 import { SQL, sql } from 'drizzle-orm';
-import { PaginatedResponse, PaginationParams } from '../types/common';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { PgTable } from 'drizzle-orm/pg-core';
 
 
-export interface PaginateParams<T = any> {
+interface PaginateParams {
   baseQuery: any;
   countQuery: any;
   paginationParams?: PaginationParams;
@@ -13,7 +13,7 @@ export interface PaginateParams<T = any> {
 
 export class PaginationUtils {
   static async paginate<T extends Record<string, unknown>>(
-    params: PaginateParams<T>
+    params: PaginateParams
   ): Promise<PaginatedResponse<T>> {
     const { baseQuery, countQuery, paginationParams, orderBy } = params;
     const { page = 1, limit = 10 } = paginationParams || {};

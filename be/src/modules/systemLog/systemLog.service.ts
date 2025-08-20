@@ -1,6 +1,6 @@
 import { db, schema } from '../../db';
 import { desc, eq, sql } from 'drizzle-orm';
-import { PaginatedResponse, PaginationParams } from '../../types/common';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { PaginationUtils } from '../../utils/PaginationUtils';
 import { FastifyRequest } from 'fastify';
 import { getCurrentUserId } from '../auth';

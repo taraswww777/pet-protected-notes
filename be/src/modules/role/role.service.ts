@@ -2,7 +2,7 @@ import { db, schema } from '../../db';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import type { AssignRoleToUserBody, CheckPermissionParams, UpdatePermissionBody } from './role.types';
 import { actions, ActionsInsert, rolePermissions, roles, RolesInsert, userRoles } from '../../db/schemas';
-import { PaginatedResponse, PaginationParams } from '../../types/common';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { PaginationUtils } from '../../utils/PaginationUtils';
 
 export interface UserWithRolesDTO {
@@ -102,8 +102,8 @@ export class RoleService {
     });
   }
 
-  private clearPermissionCacheForRole(roleId: number) {
-    this.permissionCache.forEach((userCache, userId) => {
+  private clearPermissionCacheForRole(_roleId: number) {
+    this.permissionCache.forEach((userCache, _userId) => {
       // Можно добавить более точную очистку, если известно какие actionCode связаны с roleId
       userCache.clear();
     });

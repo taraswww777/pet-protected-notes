@@ -20,6 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "../common/src/types/fastify.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

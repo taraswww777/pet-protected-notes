@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { NotesService } from './notes.service';
-
-import { PaginationParams, RequestWithBody, WithId } from '../../types/common';
+import type { PaginationParams } from 'protected-notes-common/src/types/Paginate.ts';
+import { RequestWithBody, WithId } from '../../types/common';
 import { CreateNoteBody } from './notes.types';
 import { getCurrentUserId } from '../auth';
 

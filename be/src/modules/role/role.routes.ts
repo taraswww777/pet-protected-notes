@@ -3,7 +3,7 @@ import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 import { middlewareVerifyJWT } from '../auth';
 import { AssignRoleToUserBody, CheckPermissionParams, UpdatePermissionBody } from './role.types';
-import { PaginationParams } from '../../types/common';
+import { PaginationParams } from 'protected-notes-common/src/types/Paginate';
 
 export async function roleRoutes(server: FastifyInstance) {
   const controller = new RoleController(new RoleService());

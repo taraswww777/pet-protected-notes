@@ -5,7 +5,7 @@ import type {
   UpdatePermissionBody,
   CheckPermissionParams
 } from './role.types';
-import { PaginationParams } from '../../types/common';
+import { PaginationParams } from 'protected-notes-common/src/types/Paginate';
 
 export class RoleController {
   constructor(private readonly roleService: RoleService) {

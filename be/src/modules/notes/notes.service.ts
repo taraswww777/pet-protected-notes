@@ -1,4 +1,4 @@
-import { PaginatedResponse, PaginationParams } from '../../types/common';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { db, schema } from '../../db';
 import { and, eq } from 'drizzle-orm';
 import { PaginationUtils } from '../../utils/PaginationUtils';

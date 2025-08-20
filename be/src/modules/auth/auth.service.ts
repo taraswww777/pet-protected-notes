@@ -118,7 +118,7 @@ export class AuthService extends BaseService {
     userId: number,
     oldPassword: string,
     newPassword: string,
-    request?: FastifyRequest,
+    _request?: FastifyRequest,
   ): Promise<boolean> {
     // 1. Получаем текущего пользователя
     const [user] = await db
