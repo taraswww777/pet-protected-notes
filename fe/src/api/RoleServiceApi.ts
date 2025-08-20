@@ -6,6 +6,9 @@ import {
 } from 'protected-notes-be/src/modules/role/role.types.ts';
 import { AxiosResponse } from 'axios';
 import { schema } from 'protected-notes-be/src/db/index.ts';
+import { PAGE_SIZE_DEFAULT } from '../constants/common.ts';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
+import { UserWithRolesDTO } from 'protected-notes-be/src/modules/role';
 
 export class RoleServiceApi {
   static createRole(body: { name: string; description?: string }) {
@@ -43,5 +46,17 @@ export class RoleServiceApi {
 
   static deleteRole(id: number) {
     return axiosInstance.delete(`/api/roles/roles/${id}`);
+  }
+
+  static getUsers({
+    limit = PAGE_SIZE_DEFAULT,
+    page = 1,
+  }: PaginationParams) {
+    return axiosInstance
+      .get<never, AxiosResponse<PaginatedResponse<UserWithRolesDTO>>>(
+        '/api/roles/users',
+        { params: { limit, page } },
+      )
+      .then(({ data }) => data);
   }
 }

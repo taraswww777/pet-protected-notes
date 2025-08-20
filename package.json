@@ -5,11 +5,14 @@
   "type": "module",
   "workspaces": [
     "fe",
-    "be"
+    "be",
+    "common"
   ],
   "scripts": {
-    "build": "npm run fe:build && npm run be:build",
+    "build": "npm run common:build && npm run fe:build && npm run be:build",
     "checks": "npm run fe:lint && npm run be:lint",
+    "common": "echo common scripts === === === === === === === === ===",
+    "common:build": "npm -w protected-notes-common run build",
     "be": "echo BE scripts === === === === === === === === ===",
     "be:build": "npm -w protected-notes-be run build",
     "be:start": "npm -w protected-notes-be run start",
@@ -19,7 +22,7 @@
     "be:lint:fix": "npm -w protected-notes-be run lint:fix",
     "be:db:migrate": "npm -w protected-notes-be run db:migrate",
     "be:db:generate": "npm -w protected-notes-be run db:generate",
-    "db:seeding": "npm -w protected-notes-be run db:seeding",
+    "be:db:seeding": "npm -w protected-notes-be run db:seeding",
     "fe": "echo FE scripts === === === === === === === === ===",
     "fe:dev": "npm -w protected-notes-fe run dev",
     "fe:build": "npm -w protected-notes-fe run build",

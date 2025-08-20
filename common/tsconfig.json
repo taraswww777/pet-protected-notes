@@ -14,12 +14,7 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "include": [
-    "../common/src/types/fastify.d.ts"
-  ],
   "exclude": [
-    "./drizzle.config.ts",
     "dist",
-    "./seeding.ts"
   ]
 }

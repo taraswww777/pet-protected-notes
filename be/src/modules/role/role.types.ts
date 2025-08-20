@@ -1,6 +1,6 @@
 export interface AssignRoleToUserBody {
   userId: number;
-  roleId: number;
+  roleIds: number[];
 }
 
 export interface UpdatePermissionBody {

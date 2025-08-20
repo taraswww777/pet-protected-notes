@@ -5,6 +5,7 @@ import type {
   UpdatePermissionBody,
   CheckPermissionParams
 } from './role.types';
+import { PaginationParams } from 'protected-notes-common/src/types/Paginate';
 
 export class RoleController {
   constructor(private readonly roleService: RoleService) {
@@ -21,6 +22,24 @@ export class RoleController {
       return reply.code(400).send({ error });
     }
   }
+
+  async getUsers(
+    request: FastifyRequest<{ Querystring: PaginationParams }>, // Добавляем типизацию query string
+    reply: FastifyReply
+  ) {
+    try {
+      // Извлекаем параметры пагинации из запроса
+      const page = request.query.page ? +request.query.page : undefined;
+      const limit = request.query.limit ? +request.query.limit : undefined;
+
+      // Передаем параметры в сервис
+      const users = await this.roleService.getUsers({ page, limit });
+      return reply.send(users);
+    } catch (error) {
+      return reply.code(500).send({ error });
+    }
+  }
+
 
   async getRoles(_request: FastifyRequest, reply: FastifyReply) {
     try {

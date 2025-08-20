@@ -1,3 +1,3 @@
 export { roleRoutes } from './role.routes';
-export { RoleService } from './role.service';
+export { RoleService, type UserWithRolesDTO } from './role.service';
 export { checkPermission } from './permission.middleware';

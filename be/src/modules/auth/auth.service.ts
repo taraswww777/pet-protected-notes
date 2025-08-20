@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 import { InvalidCredentialsError } from '../../errors';
 import { JWT_SECRET } from '../../constants';
-import { ResetPasswordBody, UserDTO } from '../../db/schemas';
+import { ResetPasswordBody, UserSelect } from '../../db/schemas';
 import { randomInt } from 'crypto';
 import { hashingPassword } from './auth.utils';
 import { TokenInfo } from './auth.types';
@@ -95,7 +95,7 @@ export class AuthService extends BaseService {
   }
 
 
-  async userInfo(userId: number, request?: FastifyRequest): Promise<UserDTO> {
+  async userInfo(userId: number, request?: FastifyRequest): Promise<UserSelect> {
     const [user] = await db
       .select({
         id: schema.users.id,
@@ -118,7 +118,7 @@ export class AuthService extends BaseService {
     userId: number,
     oldPassword: string,
     newPassword: string,
-    request?: FastifyRequest,
+    _request?: FastifyRequest,
   ): Promise<boolean> {
     // 1. Получаем текущего пользователя
     const [user] = await db

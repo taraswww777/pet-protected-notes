@@ -1,4 +1,4 @@
-import { PaginatedResponse, PaginationParams } from '../../types/common';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { db, schema } from '../../db';
 import { and, eq } from 'drizzle-orm';
 import { PaginationUtils } from '../../utils/PaginationUtils';
@@ -9,8 +9,7 @@ export class NotesService {
     paginationParams: PaginationParams = {},
     userId: schema.NoteInsertDTO['userId'],
   ): Promise<PaginatedResponse<schema.NoteDTO>> {
-
-    return PaginationUtils.paginate<schema.NoteDTO>(schema.notes, {
+    return PaginationUtils.paginateTable<schema.NoteDTO>(schema.notes, {
       paginationParams,
       whereCondition: eq(schema.notes.userId, userId)
     });

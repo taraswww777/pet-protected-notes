@@ -1,42 +1,37 @@
 import { db } from '../db';
 import { SQL, sql } from 'drizzle-orm';
-import { PaginatedResponse, PaginationParams } from '../types/common';
+import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { PgTable } from 'drizzle-orm/pg-core';
 
 
 interface PaginateParams {
-  whereCondition?: SQL<unknown>,
-  paginationParams?: PaginationParams,
-  orderBy?: any
+  baseQuery: any;
+  countQuery: any;
+  paginationParams?: PaginationParams;
+  orderBy?: any;
 }
 
 export class PaginationUtils {
   static async paginate<T extends Record<string, unknown>>(
-    table: PgTable,
-    { whereCondition, paginationParams, orderBy }: PaginateParams = {}
+    params: PaginateParams
   ): Promise<PaginatedResponse<T>> {
+    const { baseQuery, countQuery, paginationParams, orderBy } = params;
     const { page = 1, limit = 10 } = paginationParams || {};
-
-    const offsetCount = (page - 1) * limit;
-
-    // Создаем базовый запрос для получения данных
-    const dataQuery = whereCondition ? db.select().from(table).where(whereCondition) : db.select().from(table);
-
-    // Создаем запрос для подсчета общего количества
-    const countQuery = whereCondition ? db.select({
-      count: sql<number>`count(*)`
-    }).from(table).where(whereCondition) : db.select({
-      count: sql<number>`count(*)`
-    }).from(table);
-
-    const resultDataQuery = orderBy ? dataQuery.orderBy(orderBy) : dataQuery;
+    const offset = (page - 1) * limit;
 
     // Выполняем оба запроса параллельно
-    const [items, total] = await Promise.all([
-      resultDataQuery.limit(limit).offset(offsetCount).execute() as Promise<T[]>,
-      countQuery.then(res => Number(res[0]?.count ?? 0))
+    const [items, totalResult] = await Promise.all([
+      // Запрос данных с пагинацией
+      (orderBy ? baseQuery.orderBy(orderBy) : baseQuery)
+        .limit(limit)
+        .offset(offset)
+        .execute() as Promise<T[]>,
+
+      // Запрос для подсчета общего количества
+      countQuery.then((res: any[]) => Number(res[0]?.count ?? 0))
     ]);
 
+    const total = Number(totalResult);
     const totalPages = Math.ceil(total / limit);
 
     return {
@@ -50,13 +45,28 @@ export class PaginationUtils {
     };
   }
 
-  static async countFromTable(table: any, whereCondition?: any): Promise<number> {
-    const result = await db
-      .select({ count: sql<number>`count(id)` })
-      .from(table)
-      .where(whereCondition)
-      .then((res) => res[0]?.count || 0);
+  // Вспомогательный метод для простых запросов к одной таблице
+  static async paginateTable<T extends Record<string, unknown>>(
+    table: PgTable,
+    { whereCondition, paginationParams, orderBy }: {
+      whereCondition?: SQL<unknown>,
+      paginationParams?: PaginationParams,
+      orderBy?: any
+    } = {}
+  ): Promise<PaginatedResponse<T>> {
+    const baseQuery = whereCondition
+      ? db.select().from(table).where(whereCondition)
+      : db.select().from(table);
 
-    return +result;
+    const countQuery = whereCondition
+      ? db.select({ count: sql<number>`count(*)` }).from(table).where(whereCondition)
+      : db.select({ count: sql<number>`count(*)` }).from(table);
+
+    return this.paginate<T>({
+      baseQuery,
+      countQuery,
+      paginationParams,
+      orderBy
+    });
   }
 }

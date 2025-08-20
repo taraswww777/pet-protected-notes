@@ -1,0 +1,6 @@
+{
+  "name": "protected-notes-common",
+  "scripts": {
+    "build": "tsc --noEmit"
+  }
+}
