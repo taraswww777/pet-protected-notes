@@ -5,7 +5,7 @@ const tabs = [
   { id: 'roles', label: 'Роли', path: '/dashboard/roles' },
   { id: 'actions', label: 'Действия', path: '/dashboard/actions' },
   { id: 'users', label: 'Пользователи', path: '/dashboard/users' },
-  { id: 'settings', label: 'Настройки', path: '/dashboard/settings' },
+  { id: 'history-log', label: 'История действий', path: '/dashboard/history-log' },
 ];
 
 export const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {

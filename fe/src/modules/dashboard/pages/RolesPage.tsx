@@ -5,6 +5,7 @@ import { RoleServiceApi } from '../../../api/RoleServiceApi.ts';
 import { useMountEffect } from '../../../hooks/useMountEffect.ts';
 import { UIRole } from '../../../types/UIRole.ts';
 import { BaseConfirmModal } from '../../../uiKit/components/BaseConfirmModal.tsx';
+import { DashboardPageBaseTemplate } from '../components/DashboardPageBaseTemplate.tsx';
 
 
 const RolesPage = () => {
@@ -70,8 +71,7 @@ const RolesPage = () => {
   };
 
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-bold mb-4">Роли</h1>
+    <DashboardPageBaseTemplate title={'Роли'}>
       <RolesTable
         roles={roles}
         onAddRole={() => {
@@ -97,7 +97,7 @@ const RolesPage = () => {
         title="Подтверждение удаления роли"
         message="Вы уверены, что хотите удалить эту роль?"
       />
-    </div>
+    </DashboardPageBaseTemplate>
   );
 };
 

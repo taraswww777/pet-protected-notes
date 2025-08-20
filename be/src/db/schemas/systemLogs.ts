@@ -1,5 +1,6 @@
-import { jsonb, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { integer, jsonb, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { enumToPgEnum } from '../utils';
+import { users } from './users';
 
 export const LogLevel = {
   INFO: 'INFO',
@@ -14,6 +15,7 @@ export const logLevelPgEnum = enumToPgEnum('log_level_enum', LogLevel);
 
 export const systemLogs = pgTable('system_logs', {
   id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'no action' }),
   logLevel: logLevelPgEnum('log_level').notNull().default(LogLevel.INFO),
   attemptTime: timestamp('attempt_time').defaultNow().notNull(),
   eventType: text('event_type').notNull(), // 'Тип события: auth/login, auth/register, user/update и т.д.'
