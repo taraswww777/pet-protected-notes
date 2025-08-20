@@ -33,7 +33,6 @@ export const UsersTable: FC<UsersTableProps> = ({ users, onEditRoles, allRoles }
         </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-        {/* TODO: #101 UsersTable. Добавить empty state при отсутствии пользователей */}
         {users.map((user) => (
           <tr key={user.userId} className="hover:bg-gray-50">
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

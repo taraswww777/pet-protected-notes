@@ -36,6 +36,7 @@ const UsersPage = () => {
   useEffect(() => {
     RoleServiceApi.getUsers({ page: currentPage, limit: pageSize })
       .then(response => {
+        // setUsers(response.items);
         setUsers(response.items);
         setTotalPages(response.totalPages);
         setHasNextPage(response.hasNext);
@@ -88,24 +89,34 @@ const UsersPage = () => {
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold mb-4">Управление пользователями</h2>
+      {!users.length ? (
+        <div className="bg-white shadow rounded-lg overflow-hidden">
+          <div className="p-6 text-center text-gray-500">
+            Пользователи отсутствуют
+          </div>
+        </div>
+      ) : (
+        <>
+          <UsersTable
+            users={users}
+            allRoles={allRoles}
+            onEditRoles={onEditRoles}
+          />
 
-      <UsersTable
-        users={users}
-        allRoles={allRoles}
-        onEditRoles={onEditRoles}
-      />
-
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          onPageSizeChange={setPageSize}
-          pageSize={pageSize}
-        />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              hasNextPage={hasNextPage}
+              hasPreviousPage={hasPreviousPage}
+              onPageSizeChange={setPageSize}
+              pageSize={pageSize}
+            />
+          )}
+        </>
       )}
+
 
       <UserRoleModal
         isOpen={isModalOpen}

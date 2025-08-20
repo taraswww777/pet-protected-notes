@@ -147,6 +147,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li className="ml-4">
           <input
             min={1}
+            max={totalPages}
             type="number"
             value={inputPage}
             onChange={handleInputChange}
