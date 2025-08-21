@@ -19,7 +19,7 @@ export class RoleController {
       await this.roleService.deleteRole(request.params.id);
       return reply.send({ success: true });
     } catch (error) {
-      return reply.code(400).send({ error });
+      return reply.code(400).send({ error: (error as Error).message });
     }
   }
 
@@ -114,6 +114,15 @@ export class RoleController {
       return reply.send({ hasAccess });
     } catch (error) {
       return reply.code(500).send({ error: 'Failed to check permission' });
+    }
+  }
+
+  async getActionsWithRoles(_request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const actions = await this.roleService.getActionsWithRoles();
+      return reply.send(actions);
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to get actions with roles' });
     }
   }
 }

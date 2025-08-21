@@ -28,94 +28,64 @@ export class RoleService {
     paginationParams?: PaginationParams
   ): Promise<PaginatedResponse<UserWithRolesDTO>> {
 
-    // Базовый запрос для данных
     const baseQuery = db
       .select({
-        id: schema.users.id,
+        userId: schema.users.id,
         login: schema.users.login,
-        roleId: schema.userRoles.roleId,
+        roleIds: sql<number[]>`array(
+            select ${schema.userRoles.roleId} 
+            from ${schema.userRoles} 
+            where ${schema.userRoles.userId} = ${schema.users}.${schema.users.id}
+          )`.as('roleIds')
       })
-      .from(schema.users)
-      .leftJoin(schema.userRoles, eq(schema.users.id, schema.userRoles.userId));
+      .from(schema.users);
 
-    // Запрос для подсчета общего количества
     const countQuery = db
       .select({ count: sql<number>`count(*)` })
       .from(schema.users);
 
-    const result = await PaginationUtils.paginate<schema.UserSelect & { roleId?: number }>({
+    return await PaginationUtils.paginate<UserWithRolesDTO>({
       baseQuery,
       countQuery,
       paginationParams
     });
+  }
 
-    // Группируем записи по userId
-    const groupedMap = result.items.reduce((map, item) => {
-      if (!map.has(item.id)) {
-        map.set(item.id, {
-          userId: item.id,
-          login: item.login,
-          roleIds: []
-        });
-      }
-      if (item?.roleId) {
-        map.get(item.id)!.roleIds.push(item.roleId);
-      }
-      return map;
-    }, new Map<number, UserWithRolesDTO>());
+  /**
+   * Проверяет, есть ли пользователи с заданной ролью.
+   *
+   * @param {number} roleId - Идентификатор роли, которую нужно проверить.
+   *
+   * @returns {Promise<boolean>} - Возвращает `true`, если существует хотя бы один пользователь с указанной ролью, иначе `false`.
+   */
+  async hasUsersWithRoleId(roleId: number): Promise<boolean> {
+    const usersWithRoleCount = await db.select({
+      count: sql<number>`count(*)`
+    })
+      .from(userRoles)
+      .where(eq(userRoles.roleId, roleId))
+      .limit(1)
+      .execute();
 
-
-    return {
-      ...result,
-      items: Array.from(groupedMap.values())
-    };
+    return usersWithRoleCount[0].count > 0;
   }
 
   async deleteRole(roleId: number) {
+    // Проверяем, есть ли пользователи с этой ролью
+    const hasUsersWithRoleId = await this.hasUsersWithRoleId(roleId);
 
-    const b = db.select({
-      code: actions.code
-    })
-      .from(actions)
-      .innerJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
-      .where(eq(rolePermissions.roleId, roleId));
+    if (hasUsersWithRoleId) {
+      throw new Error('Cannot delete role: role is assigned to one or more users');
+    }
 
-    console.log('b:' , b.toSQL());
-
-    const actionItems = await db.select({
-      code: actions.code
-    })
-      .from(actions)
-      .innerJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
-      .where(eq(rolePermissions.roleId, roleId))
-      .execute()
-      .then(results => results.map(item => item.code));
-
-    console.log('roleId:', roleId)
-    console.log('actionItems:', actionItems)
-
-    return ;
     return await db.transaction(async (tx) => {
-      // Проверяем, есть ли пользователи с этой ролью
-      const usersWithRole = await tx.select()
-        .from(userRoles)
-        .where(eq(userRoles.roleId, roleId))
-        .limit(1);
-
-      if (usersWithRole.length > 0) {
-        throw new Error('Cannot delete role: role is assigned to one or more users');
-      }
-
+      // Получаем список действий, связанных с данной ролью
       const actionItems = await tx.select({
         code: actions.code
       })
         .from(actions)
         .innerJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
-        .where(eq(rolePermissions.id, roleId)).execute();
-
-      console.log('actionItems:', actionItems)
-
-      // throw new Error('dsaasd')
+        .where(eq(rolePermissions.roleId, roleId)).execute().then(results => results.map(item => item.code));
 
       // Удаляем связанные разрешения
       await tx.delete(rolePermissions)
@@ -133,11 +103,12 @@ export class RoleService {
       }
 
       // Очищаем только релевантную часть кэша
-      this.permissionCache.clearForUser(roleId);
+      this.permissionCache.clearPermissionByActionCode(actionItems);
 
       return result[0];
     });
   }
+
 
   async updateRole(id: number, params: { name: string; description?: string }) {
     const [role] = await db.update(roles)
@@ -231,12 +202,8 @@ export class RoleService {
       ))
       .limit(1);
 
-    // Сохранение в кэш
-    if (!this.permissionCache.has(userId)) {
-      this.permissionCache.set(userId, new Map());
-    }
 
-    this.permissionCache.getPermissionsByUserId(userId)!.set(actionCode, result.length > 0);
+    this.permissionCache.setPermissions(userId, { [actionCode]: result.length > 0 });
 
     return result.length > 0;
   }
@@ -246,5 +213,26 @@ export class RoleService {
       .from(userRoles)
       .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .where(eq(userRoles.userId, userId));
+  }
+
+  async getActionsWithRoles() {
+    const result = await db
+      .select({
+        id: actions.id,
+        code: actions.code,
+        name: actions.name,
+        description: actions.description,
+        parentId: actions.parentId,
+        roleIds: sql<number[]>`array_agg(distinct ${rolePermissions.roleId})`.as('roleIds')
+      })
+      .from(actions)
+      .leftJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
+      .groupBy(actions.id, actions.code, actions.name, actions.description, actions.parentId)
+      .orderBy(actions.id);
+
+    return result.map(item => ({
+      ...item,
+      roleIds: item.roleIds.filter(roleId => roleId !== null) // Убираем null из массива
+    }));
   }
 }

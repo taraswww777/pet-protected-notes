@@ -12,7 +12,7 @@ interface PaginateParams {
 }
 
 export class PaginationUtils {
-  static async paginate<T extends Record<string, unknown>>(
+  static async paginate<T>(
     params: PaginateParams
   ): Promise<PaginatedResponse<T>> {
     const { baseQuery, countQuery, paginationParams, orderBy } = params;
