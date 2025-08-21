@@ -12,6 +12,7 @@ const generateMockNote = async (): Promise<schema.NoteInsertDTO> => ({
 export const seedingNotes = () => seedGenerator<schema.NoteInsertDTO>({
   generateMockEntitiesItem: generateMockNote,
   schemaTable: schema.notes,
-  countGeneratedEntities: 10,
+  countGeneratedEntities: 150,
   title: 'Notes',
+  needClearTable: true
 });

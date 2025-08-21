@@ -1,7 +1,7 @@
 import { schema } from '../../index';
 import { seedGenerator } from '../seedGenerator';
 
-const roles: schema.RolesInsert[] = [
+const entities: schema.RolesInsert[] = [
   { name: 'Администратор', description: 'Полный доступ' },
   { name: 'Пользователь', description: 'Базовые права' },
 ];
@@ -9,7 +9,7 @@ const roles: schema.RolesInsert[] = [
 let counter = 0;
 
 const generateMock = async (): Promise<schema.RolesInsert> => {
-  const result = roles[counter];
+  const result = entities[counter];
   counter++;
 
   return result;
