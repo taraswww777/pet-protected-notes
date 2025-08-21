@@ -6,6 +6,7 @@ import { Pagination } from '../../../components/Pagination.tsx';
 import { PAGE_SIZE_DEFAULT } from '../../../constants/common.ts';
 import { UserWithRolesDTO } from 'protected-notes-be/src/modules/role';
 import { schema } from 'protected-notes-be/src/db';
+import { DashboardPageBaseTemplate } from '../components/DashboardPageBaseTemplate.tsx';
 
 
 const UsersPage = () => {
@@ -87,8 +88,7 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">Управление пользователями</h2>
+    <DashboardPageBaseTemplate title={'Управление пользователями'}>
       {!users.length ? (
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <div className="p-6 text-center text-gray-500">
@@ -96,7 +96,7 @@ const UsersPage = () => {
           </div>
         </div>
       ) : (
-        <>
+        <div className="space-y-4">
           <UsersTable
             users={users}
             allRoles={allRoles}
@@ -114,7 +114,7 @@ const UsersPage = () => {
               pageSize={pageSize}
             />
           )}
-        </>
+        </div>
       )}
 
 
@@ -125,7 +125,7 @@ const UsersPage = () => {
         allRoles={allRoles}
         onSave={handleSaveRoles}
       />
-    </div>
+    </DashboardPageBaseTemplate>
   );
 };
 

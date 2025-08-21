@@ -2,7 +2,6 @@ import { db, schema } from '../../db';
 import { eq } from 'drizzle-orm';
 import { BaseService } from '../../utils/BaseService';
 
-
 export class UserInfoService extends BaseService {
   constructor() {
     super();
@@ -40,10 +39,11 @@ export class UserInfoService extends BaseService {
     return newInfo;
   }
 
-  async delete(userId: number): Promise<schema.UserInfoSelect | undefined> {
+  async delete(userId: number): Promise<boolean> {
     const [deletedInfo] = await db.delete(schema.userInfo)
       .where(eq(schema.userInfo.userId, userId))
       .returning();
-    return deletedInfo;
+
+    return !!deletedInfo;
   }
 }

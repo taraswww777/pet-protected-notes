@@ -6,20 +6,20 @@ import { schema } from '../../db';
 export class UserInfoController {
   constructor(private readonly userInfoService: UserInfoService) {}
 
-  async get(request: FastifyRequest, reply: FastifyReply) {
+  async get(_request: FastifyRequest, _reply: FastifyReply) {
     const userId = getCurrentUserId();
     return await this.userInfoService.getByUserId(userId);
   }
 
   async update(
     request: FastifyRequest<{ Body: Partial<schema.UserInfoInsert> }>,
-    reply: FastifyReply
+    _reply: FastifyReply
   ) {
     const userId = getCurrentUserId();
     return this.userInfoService.createOrUpdate(userId, request.body);
   }
 
-  async delete(request: FastifyRequest, reply: FastifyReply) {
+  async delete(_request: FastifyRequest, reply: FastifyReply) {
     const userId = getCurrentUserId();
     const success = await this.userInfoService.delete(userId);
 
