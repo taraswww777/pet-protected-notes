@@ -4,7 +4,7 @@ import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/
 import { PaginationUtils } from '../../utils/PaginationUtils';
 import { FastifyRequest } from 'fastify';
 import { getCurrentUserId } from '../auth';
-import { stringify } from 'csv-stringify/sync';
+import { Input, Options, stringify } from 'csv-stringify/sync';
 import { users } from '../../db/schemas';
 
 /**
@@ -21,7 +21,7 @@ export class SystemLogService {
   ): Promise<string> {
     const response = await this.getAllLogs(paginationParams);
 
-    const csvData = response.items.map(log => ({
+    const csvData: Input = response.items.map(log => ({
       ID: log.id,
       'Уровень логирования': log.logLevel,
       'Время события': log.attemptTime,
@@ -35,11 +35,13 @@ export class SystemLogService {
       'Дополнительные данные': log.data ? JSON.stringify(log.data) : '',
     }));
 
-    return stringify(csvData, {
+    const options: Options = {
       header: true,
       delimiter: ';',
       quoted: true,
-    });
+    }
+
+    return stringify(csvData, options);
   }
 
 

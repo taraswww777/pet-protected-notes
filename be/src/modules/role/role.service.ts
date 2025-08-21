@@ -4,6 +4,7 @@ import type { AssignRoleToUserBody, CheckPermissionParams, UpdatePermissionBody 
 import { actions, ActionsInsert, rolePermissions, roles, RolesInsert, userRoles } from '../../db/schemas';
 import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate';
 import { PaginationUtils } from '../../utils/PaginationUtils';
+import { PermissionCacheManager } from '../../services/PermissionCacheManager';
 
 export interface UserWithRolesDTO {
   userId: number;
@@ -12,6 +13,8 @@ export interface UserWithRolesDTO {
 }
 
 export class RoleService {
+  private permissionCache = PermissionCacheManager.getInstance();
+
   // Роли
   async createRole(params: RolesInsert) {
     const [role] = await db.insert(roles)
@@ -69,6 +72,29 @@ export class RoleService {
   }
 
   async deleteRole(roleId: number) {
+
+    const b = db.select({
+      code: actions.code
+    })
+      .from(actions)
+      .innerJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
+      .where(eq(rolePermissions.roleId, roleId));
+
+    console.log('b:' , b.toSQL());
+
+    const actionItems = await db.select({
+      code: actions.code
+    })
+      .from(actions)
+      .innerJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
+      .where(eq(rolePermissions.roleId, roleId))
+      .execute()
+      .then(results => results.map(item => item.code));
+
+    console.log('roleId:', roleId)
+    console.log('actionItems:', actionItems)
+
+    return ;
     return await db.transaction(async (tx) => {
       // Проверяем, есть ли пользователи с этой ролью
       const usersWithRole = await tx.select()
@@ -79,6 +105,17 @@ export class RoleService {
       if (usersWithRole.length > 0) {
         throw new Error('Cannot delete role: role is assigned to one or more users');
       }
+
+      const actionItems = await tx.select({
+        code: actions.code
+      })
+        .from(actions)
+        .innerJoin(rolePermissions, eq(rolePermissions.actionId, actions.id))
+        .where(eq(rolePermissions.id, roleId)).execute();
+
+      console.log('actionItems:', actionItems)
+
+      // throw new Error('dsaasd')
 
       // Удаляем связанные разрешения
       await tx.delete(rolePermissions)
@@ -96,16 +133,9 @@ export class RoleService {
       }
 
       // Очищаем только релевантную часть кэша
-      this.clearPermissionCacheForRole(roleId);
+      this.permissionCache.clearForUser(roleId);
 
       return result[0];
-    });
-  }
-
-  private clearPermissionCacheForRole(_roleId: number) {
-    this.permissionCache.forEach((userCache, _userId) => {
-      // Можно добавить более точную очистку, если известно какие actionCode связаны с roleId
-      userCache.clear();
     });
   }
 
@@ -184,17 +214,10 @@ export class RoleService {
     });
   }
 
-  // В RoleService
-  private permissionCache = new Map<number, Map<string, boolean>>();
-
-
   async checkPermission({ userId, actionCode }: CheckPermissionParams) {
     // Проверка кэша
-    if (this.permissionCache.has(userId)) {
-      const userCache = this.permissionCache.get(userId)!;
-      if (userCache.has(actionCode)) {
-        return userCache.get(actionCode)!;
-      }
+    if (this.permissionCache.hasPermission(userId, actionCode)) {
+      return this.permissionCache.getPermission(userId, actionCode);
     }
 
     const result = await db.select()
@@ -212,7 +235,8 @@ export class RoleService {
     if (!this.permissionCache.has(userId)) {
       this.permissionCache.set(userId, new Map());
     }
-    this.permissionCache.get(userId)!.set(actionCode, result.length > 0);
+
+    this.permissionCache.getPermissionsByUserId(userId)!.set(actionCode, result.length > 0);
 
     return result.length > 0;
   }
