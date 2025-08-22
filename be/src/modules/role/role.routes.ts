@@ -62,4 +62,10 @@ export async function roleRoutes(server: FastifyInstance) {
     { preHandler: middlewareVerifyJWT },
     (req, reply) => controller.checkPermission(req, reply)
   );
+
+  server.get(
+    '/actions/with-roles',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => controller.getActionsWithRoles(req, reply)
+  );
 }
