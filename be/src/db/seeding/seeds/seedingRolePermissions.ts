@@ -1,14 +1,13 @@
 import { schema } from '../../index';
 import { seedGenerator } from '../seedGenerator';
 import { faker } from '@faker-js/faker';
+import { seedingConfig } from '../seedingConfig';
 
-const countRoles = 2;
-const countActions = 20;
 
 const entities: schema.RolePermissionsInsert[] = [];
 
-for (let roleId = 1; roleId <= countRoles; roleId++) {
-  for (let actionId = 1; actionId <= countActions; actionId++) {
+for (let roleId = 1; roleId <= seedingConfig.countRoles; roleId++) {
+  for (let actionId = 1; actionId <= seedingConfig.countActions; actionId++) {
     entities.push({
       roleId,
       actionId,

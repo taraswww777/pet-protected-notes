@@ -1,19 +1,33 @@
 import { schema } from '../../index';
 import { seedGenerator } from '../seedGenerator';
+import { faker } from '@faker-js/faker';
+import { seedingConfig } from '../seedingConfig';
 
-const roles: schema.UserRolesInsert[] = [
-  { roleId: 1, userId: 1 },
-  { roleId: 2, userId: 1 },
-  { roleId: 1, userId: 2 },
-  { roleId: 2, userId: 2 },
-  { roleId: 1, userId: 3 },
-  { roleId: 2, userId: 4 },
-];
+const entities: schema.UserRolesInsert[] = [];
+
+for (let userId = 1; userId <= seedingConfig.countUsers; userId++) {
+  const roles = [];
+
+  for (let roleId = 1; roleId <= seedingConfig.countRoles; roleId++) {
+    if (faker.datatype.boolean()) {
+      roles.push(roleId);
+    }
+  }
+
+  if (roles.length === 0) {
+    roles.push(faker.number.int({ min: 1, max: seedingConfig.countRoles }));
+  }
+
+  roles.forEach(roleId => {
+    entities.push({ userId, roleId });
+  });
+}
+
 
 let counter = 0;
 
 const generateMock = async (): Promise<schema.UserRolesInsert> => {
-  const result = roles[counter];
+  const result = entities[counter];
   counter++;
 
   return result;
@@ -23,7 +37,7 @@ const generateMock = async (): Promise<schema.UserRolesInsert> => {
 export const seedingUserRoles = () => seedGenerator<schema.UserRolesInsert>({
   generateMockEntitiesItem: generateMock,
   schemaTable: schema.userRoles,
-  countGeneratedEntities: roles.length,
+  countGeneratedEntities: entities.length,
   title: 'seedingUserRoles',
   needClearTable: true
 });

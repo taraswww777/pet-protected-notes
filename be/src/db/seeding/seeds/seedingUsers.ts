@@ -3,7 +3,7 @@ import { schema } from '../../index';
 import { hashingPassword } from '../../../modules/auth';
 import { seedGenerator } from '../seedGenerator';
 
-const systemUserLogin = 'tarswww777@mail.ru';
+const systemUserLogin = 'taraswww777@mail.ru';
 let setedSystemUserLogin = false;
 
 // Реализация для пользователей
