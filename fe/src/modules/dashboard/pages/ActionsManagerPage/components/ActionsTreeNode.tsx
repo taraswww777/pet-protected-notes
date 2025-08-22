@@ -1,10 +1,8 @@
 import React from 'react';
-import { Draggable } from 'react-beautiful-dnd';
 import { ActionTreeNode } from '../ActionsManagerPage.types.ts';
 
 interface ActionsTreeNodeProps {
   node: ActionTreeNode;
-  index: number;
   level: number;
   selectedActions: Set<number>;
   onToggleActionSelection: (id: number) => void;
@@ -16,7 +14,6 @@ interface ActionsTreeNodeProps {
 
 export const ActionsTreeNode: React.FC<ActionsTreeNodeProps> = ({
   node,
-  index,
   level,
   selectedActions,
   onToggleActionSelection,
@@ -30,44 +27,34 @@ export const ActionsTreeNode: React.FC<ActionsTreeNodeProps> = ({
 
   return (
     <>
-      <Draggable draggableId={`${node.data.id}`} index={index}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            className={`flex items-center py-2 px-4 ${level > 0 ? `pl-${level * 4}` : ''} hover:bg-gray-50`}
+      <div className={`flex items-center py-2 px-4 ${level > 0 ? `pl-${level * 4}` : ''} hover:bg-gray-50`}>
+        <input
+          type="checkbox"
+          checked={selectedActions.has(node.data.id)}
+          onChange={() => onToggleActionSelection(node.data.id)}
+          className="mr-2"
+        />
+        {node.children.length > 0 && (
+          <button
+            onClick={() => onToggleNode(node.data.id)}
+            className="mr-2 w-4 text-center"
           >
-            <div {...provided.dragHandleProps} className="mr-2 cursor-grab">≡</div>
-            <input
-              type="checkbox"
-              checked={selectedActions.has(node.data.id)}
-              onChange={() => onToggleActionSelection(node.data.id)}
-              className="mr-2"
-            />
-            {node.children.length > 0 && (
-              <button
-                onClick={() => onToggleNode(node.data.id)}
-                className="mr-2 w-4 text-center"
-              >
-                {isExpanded ? '−' : '+'}
-              </button>
-            )}
-            <div
-              className={`flex-1 cursor-pointer ${isSelected ? 'font-bold' : ''}`}
-              onClick={() => onActionSelect(node)}
-            >
-              {node.data.name} <span className="text-gray-500 text-sm">({node.data.code})</span>
-            </div>
-          </div>
+            {isExpanded ? '−' : '+'}
+          </button>
         )}
-      </Draggable>
+        <div
+          className={`flex-1 cursor-pointer ${isSelected ? 'font-bold' : ''}`}
+          onClick={() => onActionSelect(node)}
+        >
+          {node.data.name} <span className="text-gray-500 text-sm">({node.data.code})</span>
+        </div>
+      </div>
       {isExpanded && node.children.length > 0 && (
         <div className="pl-4">
-          {node.children?.map((childNode, childIndex) => (
+          {node.children?.map((childNode) => (
             <ActionsTreeNode
               key={childNode.data.id}
               node={childNode}
-              index={childIndex}
               level={level + 1}
               selectedActions={selectedActions}
               onToggleActionSelection={onToggleActionSelection}
