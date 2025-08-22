@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { DropResult } from 'react-beautiful-dnd';
 import { DashboardPageBaseTemplate } from '../../components/DashboardPageBaseTemplate.tsx';
 import { ActionsTreePanel } from './components/ActionsTreePanel.tsx';
 import { ActionDetailsPanel } from './components/ActionDetailsPanel.tsx';
@@ -46,16 +45,6 @@ const ActionsManagerPage = () => {
     setExpandedNodes(newExpanded);
   };
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const items = Array.from(actions);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setActions(items);
-  };
-
   // Групповые операции
   const toggleActionSelection = (id: number) => {
     const newSelected = new Set(selectedActions);
@@ -91,7 +80,6 @@ const ActionsManagerPage = () => {
           onToggleActionSelection={toggleActionSelection}
           expandedNodes={expandedNodes}
           onToggleNode={toggleNode}
-          onDragEnd={onDragEnd}
           onActionSelect={setSelectedAction}
           selectedAction={selectedAction}
           onAssignRoles={assignRolesToSelected}
