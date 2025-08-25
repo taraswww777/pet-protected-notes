@@ -8,6 +8,12 @@ import { PaginationParams } from 'protected-notes-common/src/types/Paginate';
 export async function roleRoutes(server: FastifyInstance) {
   const controller = new RoleController(new RoleService());
 
+  server.delete<{ Params: { actionId: number, roleId: number } }>(
+    '/actions/:actionId/roles/:roleId',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => controller.removeRoleFromAction(req, reply)
+  );
+
   server.get<{ Querystring: PaginationParams }>(
     '/users',
     { preHandler: middlewareVerifyJWT },
