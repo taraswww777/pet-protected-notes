@@ -163,9 +163,7 @@ const ActionsManagerPage = () => {
         <ActionDetailsPanel
           selectedAction={selectedAction}
           roles={roles}
-          onEditAction={() => {/* TODO */
-          }}
-          onAddRoles={() => selectedAction && handleOpenAddRolesModal(selectedAction)}
+          onEditAction={() => selectedAction && handleOpenAddRolesModal(selectedAction)}
           onRemoveRole={(roleId) => {
             if (selectedAction) {
               // Находим полный объект действия для передачи в модальное окно

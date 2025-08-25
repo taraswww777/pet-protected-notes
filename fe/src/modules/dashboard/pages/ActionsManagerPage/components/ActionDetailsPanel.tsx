@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ActionTreeNode } from '../ActionsManagerPage.types.ts';
 import { schema } from 'protected-notes-be/src/db/index.ts';
 
@@ -6,15 +6,13 @@ interface ActionDetailsPanelProps {
   selectedAction?: ActionTreeNode;
   roles: schema.RolesSelect[];
   onEditAction: () => void;
-  onAddRoles: () => void;
   onRemoveRole: (roleId: number) => void;
 }
 
-export const ActionDetailsPanel: React.FC<ActionDetailsPanelProps> = ({
+export const ActionDetailsPanel: React.FC<ActionDetailsPanelProps> = memo(({
   selectedAction,
   roles,
   onEditAction,
-  onAddRoles,
   onRemoveRole,
 }) => {
   if (!selectedAction) {
@@ -51,12 +49,6 @@ export const ActionDetailsPanel: React.FC<ActionDetailsPanelProps> = ({
         <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Роли с этим правом</h3>
-            <button
-              onClick={onAddRoles}
-              className="px-3 py-1 bg-green-100 text-green-800 rounded text-sm hover:bg-green-200"
-            >
-              + Добавить роли
-            </button>
           </div>
 
           <div className="space-y-2">
@@ -80,4 +72,4 @@ export const ActionDetailsPanel: React.FC<ActionDetailsPanelProps> = ({
       </div>
     </div>
   );
-};
+});

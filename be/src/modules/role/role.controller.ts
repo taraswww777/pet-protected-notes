@@ -11,6 +11,18 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {
   }
 
+  async removeAllRolesFromAction(
+    request: FastifyRequest<{ Params: { actionId: number } }>,
+    reply: FastifyReply
+  ) {
+    try {
+      await this.roleService.removeAllRolesFromAction(request.params.actionId);
+      return reply.send({ success: true });
+    } catch (error) {
+      return reply.code(400).send({ error: (error as Error).message });
+    }
+  }
+
   async addRolesToAction(
     request: FastifyRequest<{
       Params: { actionId: number },

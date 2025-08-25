@@ -15,6 +15,23 @@ export interface UserWithRolesDTO {
 export class RoleService {
   private permissionCache = PermissionCacheManager.getInstance();
 
+  async removeAllRolesFromAction(actionId: number) {
+    // Очищаем кэш перед удалением
+    const action = await db.select({ code: actions.code })
+      .from(actions)
+      .where(eq(actions.id, actionId))
+      .limit(1)
+      .execute();
+
+    await db.delete(rolePermissions)
+      .where(eq(rolePermissions.actionId, actionId))
+      .execute();
+
+    if (action.length > 0) {
+      this.permissionCache.clearPermissionByActionCode([action[0].code]);
+    }
+  }
+
   async addRolesToAction(actionId: number, roleIds: number[]) {
     // Проверяем существование действия
     const actionExists = await db.select()
