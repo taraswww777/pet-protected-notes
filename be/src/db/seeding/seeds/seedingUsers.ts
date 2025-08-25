@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { schema } from '../../index';
 import { hashingPassword } from '../../../modules/auth';
 import { seedGenerator } from '../seedGenerator';
+import { seedingConfig } from '../seedingConfig';
 
 const systemUserLogin = 'taraswww777@mail.ru';
 let setedSystemUserLogin = false;
@@ -24,7 +25,7 @@ const generateMockUser = async (): Promise<schema.UserInsertDTO> => {
 export const seedingUsers = () => seedGenerator<schema.UserInsertDTO>({
   generateMockEntitiesItem: generateMockUser,
   schemaTable: schema.users,
-  countGeneratedEntities: 10,
+  countGeneratedEntities: seedingConfig.countUsers,
   title: 'Users',
   needClearTable: true
 });
