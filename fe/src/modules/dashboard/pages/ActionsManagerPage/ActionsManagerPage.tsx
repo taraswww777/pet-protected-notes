@@ -11,6 +11,7 @@ import { ActionManagerApi, ActionWithRoles } from '../../../../api/ActionsManage
 import { BaseConfirmModal } from '../../../../uiKit/components/BaseConfirmModal.tsx';
 import { useNotification } from '../../../../services/NotificationService';
 import { NotificationType } from '../../../../services/NotificationService/NotificationService.types.ts';
+import { AddRolesToActionModal } from '../../modals/AddRolesToActionModal.tsx';
 
 
 const ActionsManagerPage = () => {
@@ -27,6 +28,20 @@ const ActionsManagerPage = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [actionToEdit, setActionToEdit] = useState<ActionWithRoles | null>(null);
   const [roleToRemove, setRoleToRemove] = useState<number | null>(null);
+
+  // В компонент ActionsManagerPage добавляем состояние:
+  const [isAddRolesModalOpen, setIsAddRolesModalOpen] = useState(false);
+  const [selectedActionForRoles, setSelectedActionForRoles] = useState<ActionTreeNode | null>(null);
+
+  const handleOpenAddRolesModal = (action: ActionTreeNode) => {
+    setSelectedActionForRoles(action);
+    setIsAddRolesModalOpen(true);
+  };
+
+  const handleCloseAddRolesModal = () => {
+    setIsAddRolesModalOpen(false);
+    setSelectedActionForRoles(null);
+  };
 
   const openRemoveRoleModal = (action: ActionWithRoles, roleId: number) => {
     setActionToEdit(action);
@@ -83,9 +98,13 @@ const ActionsManagerPage = () => {
     setSelectedActions(new Set());
   };
 
-  useMountEffect(() => {
+  const loadData = () => {
     RoleServiceApi.getRoles().then(setRoles);
     ActionManagerApi.getActions().then(setActions);
+  };
+
+  useMountEffect(() => {
+    loadData()
   });
 
 
@@ -144,10 +163,7 @@ const ActionsManagerPage = () => {
         <ActionDetailsPanel
           selectedAction={selectedAction}
           roles={roles}
-          onEditAction={() => {/* TODO */
-          }}
-          onAddRoles={() => {/* TODO */
-          }}
+          onEditAction={() => selectedAction && handleOpenAddRolesModal(selectedAction)}
           onRemoveRole={(roleId) => {
             if (selectedAction) {
               // Находим полный объект действия для передачи в модальное окно
@@ -159,6 +175,16 @@ const ActionsManagerPage = () => {
           }}
         />
       </div>
+
+      {selectedActionForRoles && (
+        <AddRolesToActionModal
+          isOpen={isAddRolesModalOpen}
+          onClose={handleCloseAddRolesModal}
+          actionId={selectedActionForRoles.data.id}
+          existingRoleIds={selectedActionForRoles.data.roleIds}
+          refreshData={loadData}
+        />
+      )}
 
       <BaseConfirmModal
         isOpen={isConfirmModalOpen}

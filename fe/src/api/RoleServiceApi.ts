@@ -11,6 +11,14 @@ import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/
 import { UserWithRolesDTO } from 'protected-notes-be/src/modules/role';
 
 export class RoleServiceApi {
+  static removeAllRolesFromAction(actionId: number) {
+    return axiosInstance.delete(`/api/roles/actions/${actionId}/roles`);
+  }
+
+  static addRolesToAction(actionId: number, roleIds: number[]) {
+    return axiosInstance.post(`/api/roles/actions/${actionId}/roles`, { roleIds });
+  }
+
   static removeRoleFromAction(actionId: number, roleId: number) {
     return axiosInstance.delete(`/api/roles/actions/${actionId}/roles/${roleId}`);
   }
