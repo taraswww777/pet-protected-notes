@@ -1,5 +1,5 @@
 export const seedingConfig = {
-  countUsers: 10,
+  countUsers: 100,
   /** min: 2 */
   countRoles: 10,
   countActions: 20,

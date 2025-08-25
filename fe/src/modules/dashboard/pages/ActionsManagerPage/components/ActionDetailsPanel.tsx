@@ -7,7 +7,7 @@ interface ActionDetailsPanelProps {
   roles: schema.RolesSelect[];
   onEditAction: () => void;
   onAddRoles: () => void;
-  onRemoveRole: (roleId: string) => void;
+  onRemoveRole: (roleId: number) => void;
 }
 
 export const ActionDetailsPanel: React.FC<ActionDetailsPanelProps> = ({
@@ -67,7 +67,7 @@ export const ActionDetailsPanel: React.FC<ActionDetailsPanelProps> = ({
                 <div key={role.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
                   <span>{role.name}</span>
                   <button
-                    onClick={() => onRemoveRole(`${roleId}`)}
+                    onClick={() => onRemoveRole(roleId)}
                     className="text-red-500 hover:text-red-700"
                   >
                     Удалить
