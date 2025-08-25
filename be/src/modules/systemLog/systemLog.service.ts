@@ -109,9 +109,9 @@ export class SystemLogService {
         eventType: schema.systemLogs.eventType,
         metadata: schema.systemLogs.metadata,
         data: schema.systemLogs.data,
-        user: sql`(SELECT json_build_object('id', ${users.id}, 'login', ${users.login}) 
-                FROM ${users} 
-                WHERE ${users.id} = ${schema.systemLogs.userId})`.as('user')
+        user: sql`(SELECT json_build_object('id', ${users.id}, 'login', ${users.login})
+                   FROM ${users}
+                   WHERE ${users.id} = ${schema.systemLogs.userId})`.as('user')
       })
       .from(schema.systemLogs);
 
