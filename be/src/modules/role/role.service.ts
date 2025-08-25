@@ -15,6 +15,64 @@ export interface UserWithRolesDTO {
 export class RoleService {
   private permissionCache = PermissionCacheManager.getInstance();
 
+  async addRolesToAction(actionId: number, roleIds: number[]) {
+    // Проверяем существование действия
+    const actionExists = await db.select()
+      .from(actions)
+      .where(eq(actions.id, actionId))
+      .limit(1);
+
+    if (actionExists.length === 0) {
+      throw new Error('Action not found');
+    }
+
+    // Проверяем существование ролей
+    const existingRoles = await db.select()
+      .from(roles)
+      .where(inArray(roles.id, roleIds));
+
+    if (existingRoles.length !== roleIds.length) {
+      throw new Error('One or more roles not found');
+    }
+
+    // Получаем уже существующие связи для этого действия
+    const existingPermissions = await db.select()
+      .from(rolePermissions)
+      .where(and(
+        eq(rolePermissions.actionId, actionId),
+        inArray(rolePermissions.roleId, roleIds)
+      ));
+
+    const existingRoleIds = existingPermissions.map(p => p.roleId);
+    const newRoleIds = roleIds.filter(id => !existingRoleIds.includes(id));
+
+    if (newRoleIds.length === 0) {
+      throw new Error('All specified roles are already assigned to this action');
+    }
+
+    await db.transaction(async (tx) => {
+      // Добавляем новые связи
+      await tx.insert(rolePermissions)
+        .values(newRoleIds.map(roleId => ({
+          roleId,
+          actionId,
+          isAllowed: true
+        })))
+        .execute();
+
+      // Очищаем кэш разрешений для этого действия
+      const action = await tx.select({ code: actions.code })
+        .from(actions)
+        .where(eq(actions.id, actionId))
+        .limit(1)
+        .execute();
+
+      if (action.length > 0) {
+        this.permissionCache.clearPermissionByActionCode([action[0].code]);
+      }
+    });
+  }
+
   async removeRoleFromAction(actionId: number, roleId: number) {
     await db.delete(rolePermissions)
       .where(and(
