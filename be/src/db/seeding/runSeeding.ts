@@ -4,6 +4,7 @@ import { seedingRoles } from './seeds/seedingRoles';
 import { seedingUserRoles } from './seeds/seedingUserRoles';
 import { seedingActions } from './seeds/seedingActions';
 import { seedingRolePermissions } from './seeds/seedingRolePermissions';
+import { seedingSystemLogs } from './seeds/seedingSystemLogs';
 
 export const runSeeding = async () => {
 
@@ -15,6 +16,7 @@ export const runSeeding = async () => {
     seedingUserRoles,
     seedingActions,
     seedingRolePermissions,
+    seedingSystemLogs,
   ];
 
   for (const seed of seeds) {

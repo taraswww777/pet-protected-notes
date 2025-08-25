@@ -4,6 +4,7 @@ import { SystemLogService } from './systemLog.service';
 import { schema } from '../../db';
 import { GetByEventTypeQuerystring } from './systemLog.types';
 import { PaginationParams } from 'protected-notes-common/src/types/Paginate';
+import { PAGE_SIZE_DEFAULT } from 'protected-notes-fe/src/constants/common';
 
 /**
  * Контроллер для работы с системным логом.
@@ -40,8 +41,16 @@ export class SystemLogController {
   async getAllLogs(
     request: FastifyRequest<{ Querystring: PaginationParams }>,
   ) {
-    const { page, limit } = request.query;
-    return this.systemLogService.getAllLogs({ page, limit });
+    const { page = 1, limit = PAGE_SIZE_DEFAULT } = request.query;
+
+    // Преобразуем параметры в числа
+    const pageNumber = typeof page === 'string' ? parseInt(page, 10) : page;
+    const limitNumber = typeof limit === 'string' ? parseInt(limit, 10) : limit;
+
+    return this.systemLogService.getAllLogs({
+      page: pageNumber,
+      limit: limitNumber
+    });
   }
 
   /**
