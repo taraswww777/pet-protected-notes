@@ -1,5 +1,5 @@
+import { UserInfoSelect } from 'protected-notes-be/src/modules/userInfo/userInfo.validation.schema.ts';
 import { axiosInstance } from './asiosInstanse.ts';
-import { schema } from 'protected-notes-be/src/db';
 
 export class AuthServiceApi {
   static login(body: { login: string, password: string }) {
@@ -18,7 +18,7 @@ export class AuthServiceApi {
     return axiosInstance.get(`/api/user-info`);
   }
 
-  static updateUserInfo(body: Partial<schema.UserInfoSelect>) {
+  static updateUserInfo(body: Partial<UserInfoSelect>) {
     return axiosInstance.put(`/api/user-info`, body);
   }
 

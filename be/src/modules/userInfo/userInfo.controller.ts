@@ -1,7 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { UserInfoService } from './userInfo.service';
 import { getCurrentUserId } from '../auth';
-import { schema } from '../../db';
+import { z } from 'zod';
+import { RequestWithBody } from '../../types/common';
+import {
+  UserInfoUpdateBody,
+  userInfoUpdateValidationSchema,
+} from './userInfo.validation.schema';
 
 export class UserInfoController {
   constructor(private readonly userInfoService: UserInfoService) {}
@@ -12,11 +17,30 @@ export class UserInfoController {
   }
 
   async update(
-    request: FastifyRequest<{ Body: Partial<schema.UserInfoInsert> }>,
-    _reply: FastifyReply
+    request: FastifyRequest<RequestWithBody<UserInfoUpdateBody>>,
+    reply: FastifyReply
   ) {
-    const userId = getCurrentUserId();
-    return this.userInfoService.createOrUpdate(userId, request.body);
+    try {
+      // Валидация входящих данных
+      const validatedData = userInfoUpdateValidationSchema.parse(request.body);
+      const userId = getCurrentUserId();
+
+      return this.userInfoService.createOrUpdate(userId, validatedData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return reply.code(400).send({
+          error: 'Ошибка валидации',
+          details: error.issues.map(issue => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+            code: issue.code
+          }))
+        });
+      }
+
+      // Для других ошибок
+      throw error;
+    }
   }
 
   async delete(_request: FastifyRequest, reply: FastifyReply) {

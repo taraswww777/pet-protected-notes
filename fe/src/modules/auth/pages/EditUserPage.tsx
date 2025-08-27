@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
 import { AuthServiceApi } from '../../../api/AuthServiceApi.ts';
-import { schema } from 'protected-notes-be/src/db';
+import type { UserInfoSelect } from '../../../../../be/src/modules/userInfo/userInfo.validation.schema.ts';
 import { useNotification } from '../../../services/NotificationService';
 import { Button } from '../../../uiKit/Button';
 
 const EditUserPage: FC = () => {
-  const [userInfo, setUserInfo] = useState<Partial<schema.UserInfoSelect>>({});
+  const [userInfo, setUserInfo] = useState<Partial<UserInfoSelect>>({});
   const { showSuccessNotification } = useNotification();
 
   useEffect(() => {
