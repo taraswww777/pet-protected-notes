@@ -1,5 +1,5 @@
 import React, { FC, FormEvent, useState } from 'react';
-import { Input, InputVariant } from '../../../uiKit/Input';
+import { Input, InputVariant } from '../../../uiKit/form/Input';
 import { Button } from '../../../uiKit/Button';
 import { useAuth } from '../AuthProvider';
 

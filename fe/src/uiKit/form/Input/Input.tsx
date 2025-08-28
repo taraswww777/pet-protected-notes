@@ -2,7 +2,7 @@ import { InputHTMLAttributes, forwardRef } from 'react';
 import { FieldError } from 'react-hook-form';
 import { InputVariant } from './Input.types.ts';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: FieldError | string | null;
   variant?: InputVariant;

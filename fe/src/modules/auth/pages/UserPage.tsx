@@ -3,10 +3,11 @@ import { AuthServiceApi } from '../../../api/AuthServiceApi.ts';
 import { Link } from 'react-router';
 import { schema } from 'protected-notes-be/src/db';
 import { LinkButton, ButtonVariant } from '../../../uiKit/Button';
+import { UserInfoSelect } from 'protected-notes-be/src/modules/userInfo/userInfo.validation.schema.ts';
 
 const UserPage: FC = () => {
   const [baseUserInfo, setBaseUserInfo] = useState<schema.UserSelect>();
-  const [userInfo, setUserInfo] = useState<Partial<schema.UserInfoSelect>>({});
+  const [userInfo, setUserInfo] = useState<Partial<UserInfoSelect>>({});
 
   useEffect(() => {
     AuthServiceApi.getCurrentUserInfo().then(({ data }) => setBaseUserInfo(data));

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, InputVariant } from '../../../uiKit/Input';
+import { Input, InputVariant } from '../../../uiKit/form/Input';
 import { Button } from '../../../uiKit/Button';
 import { AuthServiceApi } from '../../../api/AuthServiceApi';
 import { Link, useNavigate } from 'react-router';

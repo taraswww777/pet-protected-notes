@@ -9,5 +9,4 @@ export const userInfo = pgTable('userInfo', {
   thirdName: varchar('third_name'),
 });
 
-export type UserInfoSelect = typeof userInfo.$inferSelect;
-export type UserInfoInsert = typeof userInfo.$inferInsert;
+
