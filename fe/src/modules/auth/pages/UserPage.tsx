@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { AuthServiceApi } from '../../../api/AuthServiceApi.ts';
 import { Link } from 'react-router';
 import { schema } from 'protected-notes-be/src/db';
+import { LinkButton, ButtonVariant } from '../../../uiKit/Button';
 
 const UserPage: FC = () => {
   const [baseUserInfo, setBaseUserInfo] = useState<schema.UserSelect>();
@@ -16,13 +17,19 @@ const UserPage: FC = () => {
     <div className="container mx-auto p-4 max-w-2xl bg-white dark:bg-gray-800 rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Профиль пользователя</h1>
 
-      <div className="mb-8">
+      <div className="mb-8 flex gap-4">
         <Link
           to={'/user/change-password'}
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Сменить пароль
         </Link>
+        <LinkButton
+          to={'/user/edit'}
+          variant={ButtonVariant.SUCCESS}
+        >
+          Редактировать данные
+        </LinkButton>
       </div>
 
       <div className="shadow-md p-6 mb-6">
