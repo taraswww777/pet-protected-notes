@@ -10,7 +10,7 @@ export async function userInfoRoutes(server: FastifyInstance) {
 
   const userInfoController = new UserInfoController(new UserInfoService());
 
-  server.get('/', (req, reply) => userInfoController.get(req, reply));
-  server.put('/', (req: FastifyRequest<RequestWithBody<UserInfoUpdateBody>>, reply) => userInfoController.update(req, reply));
-  server.delete('/', (req, reply) => userInfoController.delete(req, reply));
+  server.get('/', {}, (req, reply) => userInfoController.get(req, reply));
+  server.put('/', {}, (req: FastifyRequest<RequestWithBody<UserInfoUpdateBody>>, reply) => userInfoController.update(req, reply));
+  server.delete('/', {}, (req, reply) => userInfoController.delete(req, reply));
 }
