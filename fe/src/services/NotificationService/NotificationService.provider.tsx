@@ -31,12 +31,25 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   };
 
+  const showSuccessNotification: NotificationContextType['showSuccessNotification'] = (message, {
+    type = NotificationType.success,
+    closeable = true,
+  } = {}) => {
+    showNotification(message, { type, closeable })
+  }
+  const showErrorNotification: NotificationContextType['showErrorNotification'] = (message, {
+    type = NotificationType.danger,
+    closeable = true,
+  } = {}) => {
+    showNotification(message, { type, closeable })
+  }
+
   const onCloseItemNotification = (notificationId: string) => {
     setNotificationList((prevNotificationList) => prevNotificationList.filter((notification) => notification.id !== notificationId));
   }
 
   return (
-    <NotificationContext.Provider value={{ showNotification }}>
+    <NotificationContext.Provider value={{ showNotification, showSuccessNotification, showErrorNotification }}>
       {children}
       {Boolean(notificationList.length) && (
         <NotificationContainer>

@@ -1,9 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import { AuthServiceApi } from '../../../api/AuthServiceApi.ts';
 import { schema } from 'protected-notes-be/src/db';
+import { useNotification } from '../../../services/NotificationService';
+import { Button } from '../../../uiKit/Button';
 
 const EditUserPage: FC = () => {
   const [userInfo, setUserInfo] = useState<Partial<schema.UserInfoSelect>>({});
+  const { showSuccessNotification } = useNotification();
 
   useEffect(() => {
     AuthServiceApi.getCurrentUserInfoDetail().then(({ data }) => setUserInfo(data));
@@ -12,7 +15,9 @@ const EditUserPage: FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInfo) return;
-    await AuthServiceApi.updateUserInfo(userInfo);
+    await AuthServiceApi.updateUserInfo(userInfo).then(() => {
+      showSuccessNotification('Данные обновлены')
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,12 +64,9 @@ const EditUserPage: FC = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
+        <Button type="submit">
           Сохранить изменения
-        </button>
+        </Button>
       </form>
     </div>
   );
