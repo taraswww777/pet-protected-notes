@@ -11,6 +11,7 @@ import {
   secondNameValidations,
   thirdNameValidations,
 } from 'protected-notes-common/src/zodValidators/fioValidations.ts';
+import { InputField } from '../../../uiKit/form';
 
 
 // Схема валидации для формы
@@ -148,59 +149,39 @@ const EditUserPage: FC = () => {
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Редактирование пользователя</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
-          <input
-            type="text"
-            name="firstName"
-            value={userInfo?.firstName || ''}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`w-full px-3 py-2 border rounded-md ${
-              errors.firstName ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Введите имя"
-          />
-          {errors.firstName && (
-            <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Фамилия</label>
-          <input
-            type="text"
-            name="secondName"
-            value={userInfo?.secondName || ''}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`w-full px-3 py-2 border rounded-md ${
-              errors.secondName ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Введите фамилию"
-          />
-          {errors.secondName && (
-            <p className="mt-1 text-sm text-red-600">{errors.secondName}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Отчество</label>
-          <input
-            type="text"
-            name="thirdName"
-            value={userInfo?.thirdName || ''}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`w-full px-3 py-2 border rounded-md ${
-              errors.thirdName ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Введите отчество"
-          />
-          {errors.thirdName && (
-            <p className="mt-1 text-sm text-red-600">{errors.thirdName}</p>
-          )}
-        </div>
+        <InputField
+          label={'Имя'}
+          type="text"
+          name="firstName"
+          value={userInfo?.firstName || ''}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="Введите имя"
+          error={errors.firstName}
+          fullWidth
+        />
+        <InputField
+          fullWidth
+          label={'Фамилия'}
+          type="text"
+          name="secondName"
+          value={userInfo?.secondName || ''}
+          error={errors.secondName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="Введите фамилию"
+        />
+        <InputField
+          fullWidth
+          label={'Отчество'}
+          type="text"
+          name="thirdName"
+          value={userInfo?.thirdName || ''}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={errors.thirdName}
+          placeholder="Введите отчество"
+        />
 
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}

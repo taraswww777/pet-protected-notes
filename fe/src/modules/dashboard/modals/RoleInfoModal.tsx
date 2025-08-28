@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BaseModal } from '../../../uiKit/components/BaseModal';
 import { UIRole } from '../../../types/UIRole.ts';
-import { Input } from '../../../uiKit/Input';
-import { Textarea } from '../../../uiKit/Textarea';
+import { Input } from '../../../uiKit/form/Input';
+import { Textarea } from '../../../uiKit/form/Textarea.tsx';
 
 type RoleInfoModalProps = {
   isOpen: boolean;

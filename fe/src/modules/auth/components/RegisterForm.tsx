@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthProvider';
-import { Input, InputVariant } from '../../../uiKit/Input';
+import { Input, InputVariant } from '../../../uiKit/form/Input';
 
 interface RegisterFormValues {
   login: string;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Input } from '../../uiKit/Input';
-import { Textarea } from '../../uiKit/Textarea.tsx';
+import { Input } from '../../uiKit/form/Input';
+import { Textarea } from '../../uiKit/form/Textarea.tsx';
 import { NotesServiceApi } from '../../api/NotesServiceApi.ts';
 import { Button, ButtonVariant } from '../../uiKit/Button';
 import { NoteEditorMode } from './NoteEditor.types.ts';
