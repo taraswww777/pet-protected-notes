@@ -20,4 +20,6 @@ export interface NotificationItem extends ShowNotificationParams {
 
 export interface NotificationContextType {
   showNotification: (message: string, params?: Partial<ShowNotificationParams>) => void;
+  showSuccessNotification: (message: string, params?: Partial<ShowNotificationParams>) => void;
+  showErrorNotification: (message: string, params?: Partial<ShowNotificationParams>) => void;
 }

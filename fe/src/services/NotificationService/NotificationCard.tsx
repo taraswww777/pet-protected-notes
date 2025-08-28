@@ -22,7 +22,7 @@ export const NotificationCard = memo(({ notification, onClose }: NotificationCar
   const { icon, bg, text } = notificationStyles[notification.type];
 
   return (
-    <div className={`${bg} ${text} p-4 rounded-lg shadow-md mb-3 flex items-start`}>
+    <div className={`${bg} ${text} w-full p-4 rounded-lg shadow-md flex items-start`}>
       <span className={`iconify mr-3 mt-0.5 flex-shrink-0 text-2xl ${icon}`}></span>
       <div className="flex-1">
         <p className="text-sm font-medium">{notification.message}</p>
