@@ -5,7 +5,10 @@ import { users } from './users';
 export const notes = pgTable('notes', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
-  content: text('content'),
+  // Меняем тип content на text и переименовываем для ясности
+  encryptedContent: text('encrypted_content').notNull(), // IV + ciphertext + authTag (base64)
+  // Добавляем новое поле
+  encryptedDek: text('encrypted_dek').notNull(), // Ключ (DEK), зашифрованный Master Key (base64)
   userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
 });
 

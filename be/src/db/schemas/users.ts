@@ -5,6 +5,8 @@ export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   login: text('login').unique().notNull(),
   password: varchar('password').notNull(),
+  // Добавляем новое поле
+  cryptoSalt: text('crypto_salt'), // Соль для KDF
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
