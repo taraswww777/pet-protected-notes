@@ -1,4 +1,4 @@
-import { NoteDTO } from './types/noteDTO';
+import { CreateNoteRequest, NoteDTO } from './types/noteDTO';
 import { axiosInstance } from './asiosInstanse.ts';
 import { PaginatedResponse, PaginationParams } from 'protected-notes-common/src/types/Paginate.ts';
 import { PAGE_SIZE_DEFAULT } from '../constants/common.ts';
@@ -35,9 +35,9 @@ export class NotesServiceApi {
       .then(({ data }) => data);
   }
 
-  static async createNote(
-    data: Omit<NoteDTO, 'id'>,
-  ) {
-    return axiosInstance.post<Omit<NoteDTO, 'id'>, AxiosResponse<NoteDTO>>(`/api/notes`, data).then(({ data }) => data);
+  static async createNote(data: CreateNoteRequest) {
+    return axiosInstance
+      .post<CreateNoteRequest, AxiosResponse<NoteDTO>>(`/api/notes`, data)
+      .then(({ data }) => data);
   }
 }

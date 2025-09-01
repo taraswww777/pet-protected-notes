@@ -30,6 +30,10 @@ export class AuthServiceApi {
     return axiosInstance.post('/api/auth/forgot-password', body);
   }
 
+  static getCryptoSalt() {
+    return axiosInstance.get<{ cryptoSalt: string }>(`/api/auth/crypto-salt`);
+  }
+
   static resetPassword(body: {
     login: string;
     resetCode: string;

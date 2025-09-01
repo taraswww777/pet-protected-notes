@@ -157,6 +157,7 @@ class CryptoService {
     }
     return btoa(binary);
   }
+
 }
 
 // Экспортируем singleton instance
