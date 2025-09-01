@@ -9,6 +9,27 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
 
+  async getCryptoSalt(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userId = (request.user as { userId: number })?.userId;
+
+      if (!userId) {
+        return reply.code(401).send({ error: 'Не авторизован' });
+      }
+
+      // Получаем пользователя из БД
+      const cryptoSalt = await this.authService.getCryptoSalt(userId, request)
+
+      if (!cryptoSalt) {
+        return reply.code(404).send({ error: 'Пользователь не найден' });
+      }
+
+      return reply.send({ cryptoSalt });
+    } catch (error) {
+      return reply.code(500).send({ error: 'Ошибка сервера' });
+    }
+  }
+
 
   async login(request: FastifyRequest<RequestWithBody<schema.LoginUserBody>>, reply: FastifyReply) {
     const data = request.body;

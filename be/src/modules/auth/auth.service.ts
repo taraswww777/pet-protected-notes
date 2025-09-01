@@ -10,6 +10,8 @@ import { hashingPassword } from './auth.utils';
 import { TokenInfo } from './auth.types';
 import { FastifyRequest } from 'fastify';
 import { BaseService } from '../../utils/BaseService';
+import { randomBytes } from 'crypto';
+
 
 export class AuthService extends BaseService {
   private resetCodes = new Map<string, { code: string; expiresAt: Date }>();
@@ -67,6 +69,21 @@ export class AuthService extends BaseService {
     return { token, id: user.id };
   }
 
+
+  async getCryptoSalt(userId: number, request?: FastifyRequest): Promise<string | null> {
+    const [user] = await db.select({ cryptoSalt: schema.users.cryptoSalt })
+      .from(schema.users)
+      .where(eq(schema.users.id, userId))
+      .limit(1)
+      .execute();
+
+    void this.logInfo('getCryptoSalt', {
+      message: `Запрошена соль для пользователя ${userId}`,
+    }, request);
+
+    return user?.cryptoSalt || null;
+  }
+
   async register(data: schema.RegisterUserBody, request?: FastifyRequest): Promise<boolean> {
     const existingUser = await db.select().from(schema.users).where(eq(schema.users.login, data.login)).limit(1).execute();
 
@@ -81,9 +98,13 @@ export class AuthService extends BaseService {
 
     const hashedPassword = await hashingPassword(data.password);
 
+    // 1. Генерация соли (16 байт) с помощью Node.js crypto
+    const cryptoSalt = randomBytes(16).toString('base64'); // <-- Исправлено!
+
     await db.insert(schema.users).values({
       login: data.login,
       password: hashedPassword,
+      cryptoSalt
     }).returning().execute();
 
     void this.logSuccess('register', {

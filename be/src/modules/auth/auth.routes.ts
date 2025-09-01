@@ -12,6 +12,13 @@ export async function authRoutes(server: FastifyInstance) {
   server.post<RequestWithBody<schema.LoginUserBody>>('/login', (req, reply) => authController.login(req, reply));
   server.post<RequestWithBody<schema.LoginUserBody>>('/register', (req, reply) => authController.register(req, reply));
 
+  server.get(
+    '/crypto-salt',
+    { preHandler: middlewareVerifyJWT },
+    (req, reply) => authController.getCryptoSalt(req, reply)
+  );
+
+
   server.get('/current-user-info',
     { preHandler: middlewareVerifyJWT },
     (req, reply) => authController.currentUserInfo(req, reply),
